@@ -46,4 +46,10 @@ class BountySaveForm(forms.Form):
 		label=u'Tags',
 		required=False,
 		widget=forms.TextInput(attrs={'size': 64})
-		)
+)
+
+class SearchForm(forms.Form):
+	query = forms.CharField(
+		label=u'Enter a keyword to search bounties',
+		widget=forms.TextInput(attrs={'size': 32})
+)
