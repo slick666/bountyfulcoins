@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from bountyfulcoinsapp.forms import *
 from bountyfulcoinsapp.models import *
 
@@ -20,18 +20,13 @@ def main_page(request):
 
 # View of the User Page.
 def user_page(request, username): 
-	try:
-		user = User.objects.get(username=username)
-	except User.DoesNotExist:
-		raise Http404(u'The Requested user was not found.')
-
-	bounties = user.bounty_set.all()
-
-	template = get_template('user_page.html')
+	user = get_object_or_404(User, username=username)
+	bounties = user.bounty_set.order_by('-id')
 	variables = RequestContext(request, {
-		'username': username,
-		'bounties': bounties
-		})
+		'bounties': bounties,
+		'username': username, 
+		'show_tags': True
+	})
 	return render_to_response('user_page.html', variables)
 
 # View for the Logout Page
@@ -67,7 +62,7 @@ def bounty_save_page(request):
 		form = BountySaveForm(request.POST)
 		if form.is_valid():
 			# Create or get link
-			link, dummy = LInk.objects.get_or_create(
+			link, dummy = Link.objects.get_or_create(
 				url=form.cleaned_data['url']
 			)
 			# Create or get Bounty.
@@ -83,7 +78,7 @@ def bounty_save_page(request):
 				#Create new tag list
 				tag_names = form.cleaned_data['tags'].split()
 				for tag_name in tag_names:
-					tag, dummy = Tagobjects.get_or_create(name=tag_name)
+					tag, dummy = Tag.objects.get_or_create(name=tag_name)
 					bounty.tag_set.add(tag)
 				# Save the Bounty to the database.
 				bounty.save()
@@ -92,7 +87,43 @@ def bounty_save_page(request):
 				)
 	else:
 		form = BountySaveForm()
-		variables = RequestContext(request, {
-			'form': form
-			})
+	variables = RequestContext(request, {
+		'form': form
+	})
 	return render_to_response('bounty_save.html', variables)
+
+def tag_page(request, tag_name):
+	tag = get_object_or_404(Tag, name=tag_name)
+	bounties = tag.bounties.order_by('-id')
+	variables = RequestContext(request, {
+		'bounties': bounties,
+		'tag_name': tag_name,
+		'show_tags': True,
+		'show_user': True
+	})
+	return render_to_response('tag_page.html', variables)
+
+def tag_cloud_page(request):
+	MAX_WEIGHT = 5
+	tags = Tag.objects.order_by('name')
+	#Calculate tag, minimum and maximum counts.
+	min_count = max_count = tags[0].bounties.count()
+	for tag in tags:
+		tag.count = tag.bounties.count()
+		if tag.count < min_count:
+			min_count = tag.count
+		if max_count < tag.count:
+			max_count = tag.count
+	#Calculate count range. Avoid dividing by zero
+	range = float(max_count - min_count)
+	if range == 0.0:
+		range = 1.0
+	# Calculate the tag weights.
+	for tag in tags:
+		tag.weight = int(
+			MAX_WEIGHT * (tag.count - min_count) / range
+		)
+	variables = RequestContext(request, {
+		'tags': tags
+	})
+	return render_to_response('tag_cloud_page.html', variables)

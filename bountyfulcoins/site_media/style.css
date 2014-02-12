@@ -5,3 +5,24 @@
 input {
 	display: block;
 }
+
+ul.tags, ul.tags li {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
+#tag-cloud {
+	text-align: center;
+}
+
+#tag-cloud a {
+	margin: 0 0.2em;
+}
+
+.tag-cloud0 { font-size: 100%; }
+.tag-cloud1 { font-size: 120%; }
+.tag-cloud2 { font-size: 140%; }
+.tag-cloud3 { font-size: 160%; }
+.tag-cloud4 { font-size: 180%; }
+.tag-cloud5 { font-size: 200%; }
