@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ username }}{% endblock %}
+{% block head %}Bounties by {{ username }} {% endblock %}
+{% block content %}
+	{% if bounties %}
+	<ul>
+		{% for bounty in bounties %}
+		<li><a href="{{ bounty.link.url }}">
+			{{ bounty.title }}</a></li>
+		{% endfor %}
+	</ul>
+	{% else %}
+		<P> No bounties listed!</p>
+	{% endif %}
+{% endblock %}
