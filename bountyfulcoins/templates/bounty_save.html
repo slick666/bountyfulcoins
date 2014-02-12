@@ -2,8 +2,5 @@
 {% block title %}Post a Bounty{% endblock %}
 {% block head %}Post a Bounty{% endblock %}
 {% block content %}
-<form method="post" action=".">{% csrf_token %}
-	{{ form.as_p }}
-	<input type="submit" value="save" />
-</form>
+{% include "bounty_save_form.html" %}
 {% endblock %}

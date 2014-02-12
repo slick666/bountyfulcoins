@@ -19,3 +19,12 @@ class Tag(models.Model):
 	bounties = models.ManyToManyField(Bounty)
 	def __unicode__(self):
 		return self.name
+
+class SharedBounty(models.Model):
+	bounty = models.ForeignKey(Bounty, unique=True)
+	date = models.DateTimeField(auto_now_add=True)
+	voates = models.IntegerField(default=1)
+	users_voted = models.ManyToManyField(User)
+
+	def __unicode__(self):
+		return u'%s, %s' % (self.bounty, self.votes)

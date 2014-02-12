@@ -37,16 +37,20 @@ class BountySaveForm(forms.Form):
 	url = forms.URLField(
 		label=u'Bounty URL',
 		widget=forms.TextInput(attrs={'size': 128})
-		)
+	)
 	title = forms.CharField(
 		label=u'Bounty Title',
 		widget=forms.TextInput(attrs={'size': 64})
-		)
+	)
 	tags = forms.CharField(
 		label=u'Tags',
 		required=False,
 		widget=forms.TextInput(attrs={'size': 64})
-)
+	)
+	share = forms.BooleanField(
+		label = u'Post to Bountyful Home Page',
+		required=False
+	)
 
 class SearchForm(forms.Form):
 	query = forms.CharField(

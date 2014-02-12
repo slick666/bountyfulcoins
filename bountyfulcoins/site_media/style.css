@@ -6,6 +6,10 @@ input {
 	display: block;
 }
 
+ul.bounties .edit {
+	font-size: 70%;
+}
+
 ul.tags, ul.tags li {
 	display: inline;
 	margin: 0;

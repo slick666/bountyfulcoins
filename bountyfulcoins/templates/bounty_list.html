@@ -2,9 +2,13 @@
 	<ul class="bounties">
 		{% for bounty in bounties %}
 		<li>
-			<a href="{{ bounty.link.urk  }}" class="title">
+			<a href="{{ bounty.link.url  }}" class="title">
 				{{ bounty.title }}</a>
 			<br />
+			{% if show_edit %}
+			<a href="/save/?url={{ bounty.link.url|urlencode }}"
+				class="edit">[edit]</a>
+			{% endif %}
 			{% if show_tags %}
 				Keywords:
 				{% if bounty.tag_set.all %}
