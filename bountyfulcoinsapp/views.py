@@ -78,15 +78,16 @@ def bounty_save_page(request):
 				)
 			else:
 				return HttpResponseRedirect(
-				'/user/%s/' % request.user.username
+					'/user/%s/' % request.user.username
 				)
 		else:
 			if ajax:
 				return HttpResponse(u'Javascript failure')
+			else:
+				return HttpResponse(u'Form not valid. Try again')
 	elif 'url' in request.GET:
 		url = request.GET['url']
 		title = ''
-		tags = ''
 		try:
 			link = Link.objects.get(url=url)
 			bounty = Bounty.objects.get(
@@ -102,7 +103,7 @@ def bounty_save_page(request):
 		form = BountySaveForm({
 			'url': url,
 			'title': title,
-			'tags': tags
+			'tags': tags,
 		})
 	else:
 		form = BountySaveForm()
@@ -113,7 +114,6 @@ def bounty_save_page(request):
 		return render_to_response('bounty_save.html', variables)
 	else:
 		return render_to_response('bounty_save.html', variables)
-
 
 
 def _bounty_save(request, form):
@@ -208,3 +208,22 @@ def search_page(request):
 		return render_to_response('bounty_list.html', variables)
 	else:
 		return render_to_response('search.html', variables)
+
+@login_required
+def bounty_vote_page(request):
+	if 'id' in request.GET:
+		try:
+			id = request.GEt['id']
+			shared_bounty = SharedBounty.objects.get(id=id)
+			user_voted = shared_bounty.users_voted.filter(
+				username=request.user.username
+			)
+			if not user_voted:
+				shared_bounty.votes +=1
+				shared_bounty.users_voted.add(request.user)
+				shared_bounty.save()
+		except SharedBounty.DoesNotExist:
+			raise Http404('Bounty not found')
+	if 'HTTP_REFERER' in request.META:
+		return HttpResponseRedirect(request.META['HTTP_REFERER'])
+	return HttpResponseRedirect('/')

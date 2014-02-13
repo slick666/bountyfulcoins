@@ -1,20 +1,19 @@
-{% if shared_bounties %}
+{% if shared_bounty %}
 	<ul class="bounties">
-		{% for shared_bounty in shared_bounties %}
+		{% for shared_bounty in shared_bounty %}
 			<li>
-				<a href="{{ shraed_bounty.bounty.link.url }}"
+				<a href="{{ shared_bounty.bounty.link.url }}"
 					class="title">
 					{{ shared_bounty.bounty.title }}</a>
 				<br />
 					Posted By:
-				<a href="/user/{{ shared_bounty.bounty.user.username }}/"
+			<a href="/user/{{ shared_bounty.bounty.user.username }}/"
 					class="username">
 					{{ shared_bounty.bounty.user.username }}</a> | 
-					<span class="vote-count">Votes:
-						{{ shared_bounty.votes }}</span>
+				<span class="vote-count">Votes:{{ shared_bounty.votes }}</span>
 			</li>
 		{% endfor %}
 	</ul>
 {% else %}
 	<p> No Bounties Found. </p>
-{% endif %}1
+{% endif %}

@@ -49,7 +49,9 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bountyfulcoinsapp'
+    'bountyfulcoinsapp',
+    'south',
+    'devserver'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -101,3 +103,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/login/'
+
+CONTEXT_PROCESSORS = 'django.core.context_processors.debug'
