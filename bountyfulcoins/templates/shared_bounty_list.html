@@ -2,6 +2,8 @@
 	<ul class="bounties">
 		{% for shared_bounties in shared_bounties %}
 			<li>
+				<a href="/vote/?id={{ shared_bounties.id}}"
+					class="vote">[+]</a>
 				{{ shared_bounties.bounty.amount }} {{ shared_bounties.bounty.currency}}
 				<a href="{{ shared_bounties.bounty.link.url }}"
 					class="title">

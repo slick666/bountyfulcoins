@@ -1,7 +1,6 @@
 import os
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-# from django.views.generic.simple import direct_to_template
 from django.views.generic import TemplateView
 from bountyfulcoinsapp.views import *
 
@@ -18,6 +17,7 @@ urlpatterns = patterns('',
 
     # Browsing
     url(r'^$', main_page),
+    url(r'^popular/$', popular_page),
     url(r'^user/(\w+)/$', user_page),
     url(r'^tag/([^\s]+)/$', tag_page),
     url(r'^tag/$', tag_cloud_page),
@@ -31,6 +31,7 @@ urlpatterns = patterns('',
 
     # Content Management
     url(r'^save/$', bounty_save_page),
+    url(r'^vote/$', bounty_vote_page),
 
     # Site Media
     url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', 

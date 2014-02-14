@@ -7,7 +7,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
+from django.db.models import Q
 from django.shortcuts import render_to_response, get_object_or_404
+from datetime import datetime, timedelta
 from bountyfulcoinsapp.forms import *
 from bountyfulcoinsapp.models import *
 
@@ -195,10 +197,12 @@ def search_page(request):
 		show_results = True
 		query = request.GET['query'].strip()
 		if query:
+			keywords = query.split()
+			q = Q()
+			for keyword in keywords:
+				q = q & Q(title__icontains=keyword)
 			form = SearchForm({'query' : query})
-			bounties = Bounty.objects.filter(
-				title__icontains=query
-			)[:10]
+			bounties = Bounty.objects.filter(q)[:10]
 	variables = RequestContext(request, {
 		'form': form,
 		'bounties': bounties,
@@ -215,7 +219,7 @@ def search_page(request):
 def bounty_vote_page(request):
 	if 'id' in request.GET:
 		try:
-			id = request.GEt['id']
+			id = request.GET['id']
 			shared_bounties = SharedBounty.objects.get(id=id)
 			user_voted = shared_bounties.users_voted.filter(
 				username=request.user.username
@@ -229,3 +233,18 @@ def bounty_vote_page(request):
 	if 'HTTP_REFERER' in request.META:
 		return HttpResponseRedirect(request.META['HTTP_REFERER'])
 	return HttpResponseRedirect('/')
+
+def popular_page(request):
+	today = datetime.today()
+	yesterday = today - timedelta(1)
+	shared_bounties = SharedBounty.objects.filter(
+		date__gt=yesterday
+	)
+	shared_bounties = shared_bounties.order_by(
+		'-votes'
+		)[:50]
+
+	variables = RequestContext(request, {
+		'shared_bounties': shared_bounties
+		})
+	return render_to_response('popular_page.html', variables)
