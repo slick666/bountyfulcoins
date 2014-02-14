@@ -128,6 +128,8 @@ def _bounty_save(request, form):
 	)
 	# Update Bounty title.
 	bounty.title = form.cleaned_data['title']
+	bounty.amount = form.cleaned_data['amount']
+	bounty.currency = form.cleaned_data['currency']
 	# If the bounty is being updated, clear old tag list
 	if not created:
 		bounty.tag_set.clear()	
@@ -214,14 +216,14 @@ def bounty_vote_page(request):
 	if 'id' in request.GET:
 		try:
 			id = request.GEt['id']
-			shared_bounty = SharedBounty.objects.get(id=id)
-			user_voted = shared_bounty.users_voted.filter(
+			shared_bounties = SharedBounty.objects.get(id=id)
+			user_voted = shared_bounties.users_voted.filter(
 				username=request.user.username
 			)
 			if not user_voted:
-				shared_bounty.votes +=1
-				shared_bounty.users_voted.add(request.user)
-				shared_bounty.save()
+				shared_bounties.votes +=1
+				shared_bounties.users_voted.add(request.user)
+				shared_bounties.save()
 		except SharedBounty.DoesNotExist:
 			raise Http404('Bounty not found')
 	if 'HTTP_REFERER' in request.META:

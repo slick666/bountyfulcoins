@@ -44,14 +44,16 @@ class BountySaveForm(forms.Form):
 		label=u'Bounty Title',
 		widget=forms.TextInput(attrs={'size': 64})
 	)
-#	amount = forms.DecimalField(
-#		label=u'Bounty Amount',
-#		widget=forms.TextInput(attrs={'size': 20})
-#	)
-#	currency = forms.CharField(
-#		label=u'Bounty Currency',
-#		widget=forms.TextInput(attrs={'size': 2})
-#	)
+	amount = forms.DecimalField(
+		label=u'Bounty Amount',
+		initial='0.00',
+		widget=forms.TextInput(attrs={'size': 20})
+	)
+	currency = forms.CharField(
+		label=u'Bounty Currency',
+		initial='BTC',
+		widget=forms.TextInput(attrs={'size': 2})
+	)
 #	description = forms.CharField(
 #		label=u'Bounty Description',
 #		widget=forms.Textarea

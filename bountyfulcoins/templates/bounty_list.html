@@ -2,6 +2,7 @@
 	<ul class="bounties">
 		{% for bounty in bounties %}
 		<li>
+			{{ bounty.amount }} {{ bounty.currency}}
 			<a href="{{ bounty.link.url  }}" class="title">
 				{{ bounty.title }}</a>
 			<br />

@@ -1,16 +1,17 @@
-{% if shared_bounty %}
+{% if shared_bounties %}
 	<ul class="bounties">
-		{% for shared_bounty in shared_bounty %}
+		{% for shared_bounties in shared_bounties %}
 			<li>
-				<a href="{{ shared_bounty.bounty.link.url }}"
+				{{ shared_bounties.bounty.amount }} {{ shared_bounties.bounty.currency}}
+				<a href="{{ shared_bounties.bounty.link.url }}"
 					class="title">
-					{{ shared_bounty.bounty.title }}</a>
+					{{ shared_bounties.bounty.title }}</a>
 				<br />
 					Posted By:
-			<a href="/user/{{ shared_bounty.bounty.user.username }}/"
+			<a href="/user/{{ shared_bounties.bounty.user.username }}/"
 					class="username">
-					{{ shared_bounty.bounty.user.username }}</a> | 
-				<span class="vote-count">Votes:{{ shared_bounty.votes }}</span>
+					{{ shared_bounties.bounty.user.username }}</a> | 
+				<span class="vote-count">Votes:{{ shared_bounties.votes }}</span>
 			</li>
 		{% endfor %}
 	</ul>
