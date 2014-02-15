@@ -248,3 +248,7 @@ def popular_page(request):
 		'shared_bounties': shared_bounties
 		})
 	return render_to_response('popular_page.html', variables)
+
+	# View for the Logout Page
+def about_page(request):
+	return render_to_response('about.html')

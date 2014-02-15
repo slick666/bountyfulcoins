@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^tag/([^\s]+)/$', tag_page),
     url(r'^tag/$', tag_cloud_page),
     url(r'^search/$', search_page),
+    url(r'^about/$', about_page),
 
     # Session and user management
     url(r'^login/$', 'django.contrib.auth.views.login'),
@@ -35,7 +36,7 @@ urlpatterns = patterns('',
 
     # Site Media
     url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', 
-    	{'document_root': site_media}),
+        {'document_root': site_media}),
     
     # Django CMS Admin Page
     url(r'^admin/', include(admin.site.urls)),
