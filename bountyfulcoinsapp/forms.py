@@ -52,7 +52,7 @@ class BountySaveForm(forms.Form):
 	currency = forms.CharField(
 		label=u'Bounty Currency',
 		initial='BTC',
-		widget=forms.TextInput(attrs={'size': 2})
+		widget=forms.TextInput(attrs={'size': 5})
 	)
 #	description = forms.CharField(
 #		label=u'Bounty Description',

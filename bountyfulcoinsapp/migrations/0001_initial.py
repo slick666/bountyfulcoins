@@ -21,6 +21,8 @@ class Migration(SchemaMigration):
             ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('link', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['bountyfulcoinsapp.Link'])),
+            ('amount', self.gf('django.db.models.fields.DecimalField')(default=0.0, max_digits=20, decimal_places=2)),
+            ('currency', self.gf('django.db.models.fields.CharField')(default='BTC', max_length=15)),
         ))
         db.send_create_signal(u'bountyfulcoinsapp', ['Bounty'])
 
@@ -111,6 +113,8 @@ class Migration(SchemaMigration):
         },
         u'bountyfulcoinsapp.bounty': {
             'Meta': {'object_name': 'Bounty'},
+            'amount': ('django.db.models.fields.DecimalField', [], {'default': '0.0', 'max_digits': '20', 'decimal_places': '2'}),
+            'currency': ('django.db.models.fields.CharField', [], {'default': "'BTC'", 'max_length': '15'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'link': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bountyfulcoinsapp.Link']"}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),

@@ -13,7 +13,7 @@ class Bounty(models.Model):
 	user = models.ForeignKey(User)
 	link = models.ForeignKey(Link)
 	amount = models.DecimalField(default=0.00, max_digits=20,decimal_places=2)
-	currency = models.CharField(default='BTC', max_length=3)
+	currency = models.CharField(default='BTC', max_length=15)
 #	description = models.TextField()
 	def __unicode__(self):
 		return u'%s, %s' % (self.user.username, self.link.url)
