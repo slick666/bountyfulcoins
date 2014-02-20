@@ -16,7 +16,7 @@ from bountyfulcoinsapp.models import *
 
 # Views for the Home Page
 def main_page(request):
-	shared_bounties = SharedBounty.objects.order_by('-date')[:50]
+	shared_bounties = SharedBounty.objects.order_by('votes')[:50]
 	variables = RequestContext(request, {
 		'shared_bounties': shared_bounties
 		})

@@ -6,6 +6,8 @@ input {
 	display: block;
 }
 
+li {padding-bottom: 1em;}
+
 ul.bounties .edit {
 	font-size: 70%;
 }
@@ -30,3 +32,4 @@ ul.tags, ul.tags li {
 .tag-cloud3 { font-size: 160%; }
 .tag-cloud4 { font-size: 180%; }
 .tag-cloud5 { font-size: 200%; }
+
