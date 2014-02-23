@@ -10,56 +10,75 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding model 'Link'
         db.create_table(u'bountyfulcoinsapp_link', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('url', self.gf('django.db.models.fields.URLField')(unique=True, max_length=200)),
+            (u'id', self.gf('django.db.models.fields.AutoField')
+             (primary_key=True)),
+            ('url', self.gf('django.db.models.fields.URLField')
+             (unique=True, max_length=200)),
         ))
         db.send_create_signal(u'bountyfulcoinsapp', ['Link'])
 
         # Adding model 'Bounty'
         db.create_table(u'bountyfulcoinsapp_bounty', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('link', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['bountyfulcoinsapp.Link'])),
-            ('amount', self.gf('django.db.models.fields.DecimalField')(default=0.0, max_digits=20, decimal_places=2)),
-            ('currency', self.gf('django.db.models.fields.CharField')(default='BTC', max_length=15)),
+            (u'id', self.gf('django.db.models.fields.AutoField')
+             (primary_key=True)),
+            ('title', self.gf('django.db.models.fields.CharField')
+             (max_length=200)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')
+             (to=orm['auth.User'])),
+            ('link', self.gf('django.db.models.fields.related.ForeignKey')
+             (to=orm['bountyfulcoinsapp.Link'])),
+            ('amount', self.gf('django.db.models.fields.DecimalField')
+             (default=0.0, max_digits=20, decimal_places=2)),
+            ('currency', self.gf('django.db.models.fields.CharField')
+             (default='BTC', max_length=15)),
         ))
         db.send_create_signal(u'bountyfulcoinsapp', ['Bounty'])
 
         # Adding model 'Tag'
         db.create_table(u'bountyfulcoinsapp_tag', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=64)),
+            (u'id', self.gf('django.db.models.fields.AutoField')
+             (primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')
+             (unique=True, max_length=64)),
         ))
         db.send_create_signal(u'bountyfulcoinsapp', ['Tag'])
 
         # Adding M2M table for field bounties on 'Tag'
         m2m_table_name = db.shorten_name(u'bountyfulcoinsapp_tag_bounties')
         db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('tag', models.ForeignKey(orm[u'bountyfulcoinsapp.tag'], null=False)),
-            ('bounty', models.ForeignKey(orm[u'bountyfulcoinsapp.bounty'], null=False))
+            ('id', models.AutoField(
+                verbose_name='ID', primary_key=True, auto_created=True)),
+            ('tag', models.ForeignKey(
+                orm[u'bountyfulcoinsapp.tag'], null=False)),
+            ('bounty', models.ForeignKey(
+                orm[u'bountyfulcoinsapp.bounty'], null=False))
         ))
         db.create_unique(m2m_table_name, ['tag_id', 'bounty_id'])
 
         # Adding model 'SharedBounty'
         db.create_table(u'bountyfulcoinsapp_sharedbounty', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('bounty', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['bountyfulcoinsapp.Bounty'], unique=True)),
-            ('date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('votes', self.gf('django.db.models.fields.IntegerField')(default=1)),
+            (u'id', self.gf('django.db.models.fields.AutoField')
+             (primary_key=True)),
+            ('bounty', self.gf('django.db.models.fields.related.ForeignKey')
+             (to=orm['bountyfulcoinsapp.Bounty'], unique=True)),
+            ('date', self.gf('django.db.models.fields.DateTimeField')
+             (auto_now_add=True, blank=True)),
+            ('votes', self.gf(
+                'django.db.models.fields.IntegerField')(default=1)),
         ))
         db.send_create_signal(u'bountyfulcoinsapp', ['SharedBounty'])
 
         # Adding M2M table for field users_voted on 'SharedBounty'
-        m2m_table_name = db.shorten_name(u'bountyfulcoinsapp_sharedbounty_users_voted')
+        m2m_table_name = db.shorten_name(
+            u'bountyfulcoinsapp_sharedbounty_users_voted')
         db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('sharedbounty', models.ForeignKey(orm[u'bountyfulcoinsapp.sharedbounty'], null=False)),
+            ('id', models.AutoField(
+                verbose_name='ID', primary_key=True, auto_created=True)),
+            ('sharedbounty', models.ForeignKey(
+                orm[u'bountyfulcoinsapp.sharedbounty'], null=False)),
             ('user', models.ForeignKey(orm[u'auth.user'], null=False))
         ))
         db.create_unique(m2m_table_name, ['sharedbounty_id', 'user_id'])
-
 
     def backwards(self, orm):
         # Deleting model 'Link'
@@ -78,8 +97,8 @@ class Migration(SchemaMigration):
         db.delete_table(u'bountyfulcoinsapp_sharedbounty')
 
         # Removing M2M table for field users_voted on 'SharedBounty'
-        db.delete_table(db.shorten_name(u'bountyfulcoinsapp_sharedbounty_users_voted'))
-
+        db.delete_table(
+            db.shorten_name(u'bountyfulcoinsapp_sharedbounty_users_voted'))
 
     models = {
         u'auth.group': {
