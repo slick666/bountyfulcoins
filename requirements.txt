@@ -1,0 +1,14 @@
+Django==1.6.2
+django-registration==1.0
+django-recaptcha==0.0.9
+south==0.8.4
+
+# for proper mail validation
+validate_email==1.1
+# pydns==2.3.6
+# -e bzr+lp:python-dns#egg=python-dns
+# -e bzr+lp:ubuntu/precise/python-dns#egg=python-dns
+-e bzr+http://bazaar.launchpad.net/~ubuntu-branches/ubuntu/precise/python-dns/precise-proposed#egg=python-dns
+
+# for development
+-e git://github.com/dcramer/django-devserver.git@b65bee8e22adf777181147a7e80fb16ace1fd776#egg=django_devserver-dev

@@ -1,2 +1,4 @@
 *.pyc
 
+/bountyfulcoins/bountyfulcoins.local.db
+/bountyfulcoins/host_settings.py
