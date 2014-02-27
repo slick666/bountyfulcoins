@@ -14,7 +14,6 @@ import os.path
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
@@ -40,7 +39,6 @@ ALLOWED_HOSTS = []
 SITE_ID = 1
 
 # Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -69,9 +67,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'bountyfulcoins.urls'
-
 WSGI_APPLICATION = 'bountyfulcoins.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases

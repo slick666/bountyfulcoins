@@ -1,30 +1,42 @@
-from django.shortcuts import render
-from django.http import HttpResponse, Http404, HttpRequest
-from django.http import HttpResponseRedirect
-from django.template import RequestContext
-from django.template.loader import get_template
-from django.contrib.auth.models import User
-from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
-from django.core.context_processors import csrf
-from django.db.models import Q
-from django.shortcuts import render_to_response, get_object_or_404
 from datetime import datetime, timedelta
-from bountyfulcoinsapp.forms import *
-from bountyfulcoinsapp.models import *
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.db.models import Q
+from django.http import Http404
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext
+from django.views.generic.edit import CreateView, UpdateView
+
+from registration.views import RegistrationView as BaseRegistrationView
+
+from bountyfulcoinsapp.forms import (RegistrationForm, SearchForm,
+                                     BountySaveForm)
+from bountyfulcoinsapp.models import Link, Bounty, SharedBounty, Tag
+
+
+class RegistrationView(BaseRegistrationView):
+    form_class = RegistrationForm
+
+    def register(self, request, username, email, password1, **cleaned_data):
+        User.objects.create_user(username=username, email=email,
+                                 password=password1)
+
+    def get_success_url(self, request=None, user=None):
+        return reverse('registration_complete')
 
 
 # Views for the Home Page
 def main_page(request):
-    shared_bounties = SharedBounty.objects.order_by('votes')[:50]
-    variables = RequestContext(request, {
+    shared_bounties = SharedBounty.objects.order_by('-votes')[:50]
+    return render(request, 'main_page.html', {
         'shared_bounties': shared_bounties
     })
-    return render_to_response('main_page.html', variables)
+
 
 # View of the User Page.
-
-
 def user_page(request, username):
     user = get_object_or_404(User, username=username)
     bounties = user.bounty_set.order_by('-id')
@@ -36,130 +48,54 @@ def user_page(request, username):
     })
     return render_to_response('user_page.html', variables)
 
-# View for the Logout Page
 
+class BountyReusableMixin(object):
+    template_name = 'bounty_save.html'
+    model = Bounty
+    form_class = BountySaveForm
 
-def logout_page(request):
-    logout(request)
-    return HttpResponseRedirect('/')
+    def get_initial(self):
+        initial = self.initial
+        if self.object:
+            initial['url'] = self.object.link.url
+            tags = self.object.tags.all()
+            if tags:
+                initial['tags'] = ", ".join(tags.values_list('name', flat=True))
+        return initial
 
-# View for the user registration page
+    def _process_form(self, form):
+        data = form.cleaned_data
+        bounty = form.save(commit=False)
+        bounty.user = self.request.user
+        bounty.link, created = Link.objects.get_or_create(url=data['url'])
+        tag_names = data['tags'].split(',')
+        bounty.tags.clear()  # remove existing tags before assigning new ones
+        for tag_name in tag_names:
+            tag, created = Tag.objects.get_or_create(name=tag_name.strip())
+            bounty.tags.add(tag)
+        bounty.save()
+        self.object = bounty
 
-
-def register_page(request):
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            user = User.objects.create_user(
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password1'],
-                email=form.cleaned_data['email']
+        if data['share']:
+            shared, created = SharedBounty.objects.get_or_create(
+                bounty=bounty
             )
-            return HttpResponseRedirect('/register/success')
-    else:
-        form = RegistrationForm()
-    variables = RequestContext(request, {
-        'form': form
-    })
-    return render_to_response(
-        'registration/register.html',
-        variables
-    )
 
-# View for the Bounty Save Page very similar to the registration page view
-# above
+            if created:
+                shared.users_voted.add(self.request.user)
+                shared.save()
+
+    def form_valid(self, form):
+        self._process_form(form)
+        return HttpResponseRedirect(self.get_success_url())
 
 
-@login_required
-def bounty_save_page(request):
-    # ajax = 'ajax' in request.GET
-    ajax = request.is_ajax()
-    if request.method == 'POST':
-        form = BountySaveForm(request.POST)
-        if form.is_valid():
-            bounty = _bounty_save(request, form)
-            if ajax:
-                variables = RequestContext(request, {
-                    'bounties': [bounty],
-                    'show_edit': True,
-                    'show_tags': True
-                })
-                return render_to_response(
-                    'bounty_list.html', variables
-                )
-            else:
-                return HttpResponseRedirect(
-                    '/user/%s/' % request.user.username
-                )
-        else:
-            if ajax:
-                return HttpResponse(u'Javascript failure')
-            else:
-                return HttpResponse(u'Form not valid. Try again')
-    elif 'url' in request.GET:
-        url = request.GET['url']
-        title = ''
-        try:
-            link = Link.objects.get(url=url)
-            bounty = Bounty.objects.get(
-                link=link,
-                user=request.user
-            )
-            title = bounty.title
-            tags = ' '.join(
-                tag.name for tag in bounty.tag_set.all()
-            )
-        except (Link.DoesNotExist, Bounty.DoesNotExist):
-            pass
-        form = BountySaveForm({
-            'url': url,
-            'title': title,
-            'tags': tags,
-        })
-    else:
-        form = BountySaveForm()
-    variables = RequestContext(request, {
-        'form': form
-    })
-    if ajax:
-        return render_to_response('bounty_save.html', variables)
-    else:
-        return render_to_response('bounty_save.html', variables)
+class BountyCreate(BountyReusableMixin, CreateView):
+    pass
 
 
-def _bounty_save(request, form):
-    # Create or get link
-    link, dummy = Link.objects.get_or_create(
-        url=form.cleaned_data['url']
-    )
-    # Create or get Bounty.
-    bounty, created = Bounty.objects.get_or_create(
-        user=request.user,
-        link=link
-    )
-    # Update Bounty title.
-    bounty.title = form.cleaned_data['title']
-    bounty.amount = form.cleaned_data['amount']
-    bounty.currency = form.cleaned_data['currency']
-    # If the bounty is being updated, clear old tag list
-    if not created:
-        bounty.tag_set.clear()
-    # Create new tag list
-    tag_names = form.cleaned_data['tags'].split()
-    for tag_name in tag_names:
-        tag, dummy = Tag.objects.get_or_create(name=tag_name)
-        bounty.tag_set.add(tag)
-    # Post on the Home page if requested
-    if form.cleaned_data['share']:
-        shared, created = SharedBounty.objects.get_or_create(
-            bounty=bounty
-        )
-    if created:
-        shared.users_voted.add(request.user)
-        shared.save()
-    # Save the Bounty to the database and return it.
-    bounty.save()
-    return bounty
+class BountyChange(BountyReusableMixin, UpdateView):
+    pass
 
 
 def tag_page(request, tag_name):
@@ -221,7 +157,7 @@ def search_page(request):
         'show_tags': True,
         'show_user': True
     })
-    if request.GET.has_key('ajax'):
+    if 'ajax' in request.GET:
         return render_to_response('bounty_list.html', variables)
     else:
         return render_to_response('search.html', variables)

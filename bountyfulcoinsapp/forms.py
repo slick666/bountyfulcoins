@@ -1,69 +1,49 @@
-import re
 from django import forms
-from django.contrib.auth.models import User
-from django.db import connection
-print connection.queries
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.utils.translation import ugettext_lazy as _
+
+from captcha.fields import ReCaptchaField
+from registration.forms import RegistrationForm as BaseRegistrationForm
+from validate_email import validate_email
+
+from bountyfulcoinsapp.models import Bounty
 
 
-class RegistrationForm(forms.Form):
-    username = forms.CharField(label=u'Username', max_length=30)
-    email = forms.EmailField(label=u'Email')
-    password1 = forms.CharField(
-        label=u'Password',
-        widget=forms.PasswordInput()
-    )
-    password2 = forms.CharField(
-        label=u'Password (Again)',
-        widget=forms.PasswordInput()
-    )
+class RegistrationForm(BaseRegistrationForm):
+    recaptcha = ReCaptchaField(attrs={'theme': 'clean'})
 
-    def cleaned_password2(self):
-        if 'password1' in self.cleaned_data:
-            password1 = self.cleaned.data['password1']
-            password2 = self.cleaned_data['password2']
-            if password1 == password2:
-                return password2
-        raise forms.ValidationError('Passwords do not matrch.')
-
-    def cleaned_username(self):
-        username = self.cleaned_data['username']
-        if not re.search(r'^w+$', username):
-            raise forms.ValidationError('Username can only contain '
-                                        'alphanumeric characters and the underscore.')
-            try:
-                User.objects.get(username=username)
-            except User.DoesNotExist:
-                return username
-            raise forms.ValidationError('Username is already taken.')
+    def clean_email(self):
+        """ Validate that the supplied email address does not exist """
+        User = get_user_model()
+        if User.objects.filter(email__iexact=self.cleaned_data['email']):
+            raise forms.ValidationError(_(
+                "This email address is already in use. Please supply a "
+                "different email address."))
+        if not validate_email(self.cleaned_data['email'],
+                              check_mx=settings.CHECK_MX,
+                              verify=settings.CHECK_EMAIL_EXISTS):
+            raise forms.ValidationError(_(
+                "This email does not seem to be a valid address, please try"
+                " another mail address"))
+        return self.cleaned_data['email']
 
 
-class BountySaveForm(forms.Form):
+class BountySaveForm(forms.ModelForm):
+    class Meta:
+        model = Bounty
+        exclude = ('link', 'user',)
+        fields = ('url', 'title', 'amount', 'currency', 'tags', 'share')
+
     url = forms.URLField(
         label=u'Bounty URL',
-        widget=forms.TextInput(attrs={'size': 128})
+        widget=forms.TextInput(attrs={'size': 128}),
     )
-    title = forms.CharField(
-        label=u'Bounty Title',
-        widget=forms.TextInput(attrs={'size': 64})
-    )
-    amount = forms.DecimalField(
-        label=u'Bounty Amount',
-        initial='0.00',
-        widget=forms.TextInput(attrs={'size': 20})
-    )
-    currency = forms.CharField(
-        label=u'Bounty Currency',
-        initial='BTC',
-        widget=forms.TextInput(attrs={'size': 5})
-    )
-#	description = forms.CharField(
-#		label=u'Bounty Description',
-#		widget=forms.Textarea
-#	)
     tags = forms.CharField(
         label=u'Tags',
         required=False,
-        widget=forms.TextInput(attrs={'size': 64})
+        widget=forms.TextInput(attrs={'size': 64}),
+        help_text=_('Please enter a comma seperated list of tags')
     )
     share = forms.BooleanField(
         label=u'Post to Bountyful Home Page',
