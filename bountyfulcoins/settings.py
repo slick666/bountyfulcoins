@@ -49,9 +49,14 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bountyfulcoinsapp',
+
+    'django_extensions',
     'south',
-    'devserver'
+    'devserver',
+    'registration',
+    'captcha',
+
+    'bountyfulcoinsapp',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -85,23 +90,35 @@ DATABASES = {
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
 STATIC_URL = '/static/'
-
 LOGIN_URL = '/login/'
 
-CONTEXT_PROCESSORS = 'django.core.context_processors.debug'
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.debug',
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages"
+)
+
+ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window
+RECAPTCHA_USE_SSL = True
+RECAPTCHA_PUBLIC_KEY = '6Ld6Su8SAAAAAEjAGF4Lt3mOzfhK6snc3Ub_SYBt'
+RECAPTCHA_PRIVATE_KEY = 'PLEASE_USE_REAL_KEY_IN_PRODUCTION'
+
+# an issue with pydns prevents this from working properly
+CHECK_MX = False
+CHECK_EMAIL_EXISTS = False
