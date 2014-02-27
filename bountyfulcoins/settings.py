@@ -37,7 +37,7 @@ ADMINS = (
 ALLOWED_HOSTS = []
 
 # Set the Site ID
-SITE_ID=1
+SITE_ID = 1
 
 # Application definition
 
