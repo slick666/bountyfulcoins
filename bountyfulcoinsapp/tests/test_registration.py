@@ -1,46 +1,16 @@
-from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from django_webtest import WebTest
 
 from bountyfulcoinsapp.forms import RegistrationForm
-
-
-class SiteDataMixin(object):
-    fixtures = ['users', 'bounties']
-    # existing users: admin | qwe123, user | test
-
-    @classmethod
-    def setUpClass(cls):
-        cls.User = get_user_model()
-
-
-class TestHeaderLinks(SiteDataMixin, WebTest):
-    required_links = ('main_page',
-                      'popular',
-                      'about',)
-    logged_out = ('auth_login',
-                  'registration_register',)
-    logged_in = ('auth_logout', 'search',
-                 'create_bounty',)
-
-    def test_header_contains_links(self):
-        # logged out test
-        index = self.app.get(reverse('main_page'))
-        for link in self.required_links + self.logged_out:
-            self.assertTrue(index.click(href=reverse(link), index=0))
-
-        # authenticated test
-        index = self.app.get(reverse('main_page'), user='user')
-        for link in self.required_links + self.logged_in:
-            self.assertTrue(index.click(href=reverse(link), index=0))
-
-        self.assertTrue(index.click(href=reverse(
-            'user_page', args=['user']), index=0))
+from .common import SiteDataMixin
 
 
 class TestRegistration(SiteDataMixin, WebTest):
+    """
+    End to end test of the registration form, view and templates
+    """
     required_fields = ['username', 'email', 'password1', 'password2',
                        'recaptcha_challenge_field']
     good_reg_data = {
@@ -114,3 +84,7 @@ class TestRegistration(SiteDataMixin, WebTest):
         err_msg = RegistrationForm.email_taken_error
         self.assertFormError(regform.submit(), 'form', field_name,
                              err_msg)
+
+    def test_valid_registration(self):
+        # TODO: write me
+        pass
