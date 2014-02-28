@@ -3,6 +3,7 @@ Django==1.6.2
 django-registration==1.0
 django-recaptcha==0.0.9
 south==0.8.4
+requests==2.2.1
 
 # for proper mail validation
 validate_email==1.1
