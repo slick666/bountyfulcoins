@@ -7,7 +7,7 @@
 	<p>
 		Thank you for registering to Bountyful Coins. Your information has been
 		saved. Now you can either 
-		<a href="/login/">login</a> or go back to the
-		<a href="/">main page of Bounties</a>
+		<a href="{% url 'auth_login' %}">login</a> or go back to the
+		<a href="{% url 'url_main' %}">main page of Bounties</a>
 	</p>
 {% endblock content %}

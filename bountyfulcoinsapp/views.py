@@ -5,16 +5,25 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.utils.decorators import method_decorator
+
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
 from registration.views import RegistrationView as BaseRegistrationView
 
 from bountyfulcoinsapp.forms import (RegistrationForm, SearchForm,
                                      BountySaveForm)
-from bountyfulcoinsapp.models import Link, Bounty, SharedBounty, Tag
+from bountyfulcoinsapp.models import Bounty, SharedBounty, Tag
+
+
+class LoginRequiredMixin(object):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(LoginRequiredMixin, self).dispatch(
+            request, *args, **kwargs)
 
 
 class RegistrationView(BaseRegistrationView):
@@ -29,11 +38,18 @@ class RegistrationView(BaseRegistrationView):
 
 
 # Views for the Home Page
-def main_page(request):
-    shared_bounties = SharedBounty.objects.order_by('-votes')[:50]
-    return render(request, 'main_page.html', {
-        'shared_bounties': shared_bounties
-    })
+class HomePageView(TemplateView):
+    template_name = "main_page.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(HomePageView, self).get_context_data(**kwargs)
+        shared_bounties = SharedBounty.objects.order_by('-votes')[:50]
+        context['shared_bounties'] = shared_bounties
+        return context
+
+
+class AboutView(TemplateView):
+    template_name = "about.html"
 
 
 # View of the User Page.
@@ -61,40 +77,20 @@ class BountyReusableMixin(object):
             tags = self.object.tags.all()
             if tags:
                 initial['tags'] = ", ".join(tags.values_list('name', flat=True))
+            if self.object.shared:
+                initial['share'] = True
         return initial
 
-    def _process_form(self, form):
-        data = form.cleaned_data
-        bounty = form.save(commit=False)
-        bounty.user = self.request.user
-        bounty.link, created = Link.objects.get_or_create(url=data['url'])
-        tag_names = data['tags'].split(',')
-        bounty.tags.clear()  # remove existing tags before assigning new ones
-        for tag_name in tag_names:
-            tag, created = Tag.objects.get_or_create(name=tag_name.strip())
-            bounty.tags.add(tag)
-        bounty.save()
-        self.object = bounty
-
-        if data['share']:
-            shared, created = SharedBounty.objects.get_or_create(
-                bounty=bounty
-            )
-
-            if created:
-                shared.users_voted.add(self.request.user)
-                shared.save()
-
     def form_valid(self, form):
-        self._process_form(form)
+        form.save(user=self.request.user)
         return HttpResponseRedirect(self.get_success_url())
 
 
-class BountyCreate(BountyReusableMixin, CreateView):
+class BountyCreate(LoginRequiredMixin, BountyReusableMixin, CreateView):
     pass
 
 
-class BountyChange(BountyReusableMixin, UpdateView):
+class BountyChange(LoginRequiredMixin, BountyReusableMixin, UpdateView):
     pass
 
 
@@ -199,7 +195,3 @@ def popular_page(request):
     return render_to_response('popular_page.html', variables)
 
     # View for the Logout Page
-
-
-def about_page(request):
-    return render_to_response('about.html')

@@ -7,7 +7,7 @@
 				{{ bounty.title }}</a>
 			<br />
 			{% if show_edit %}
-			<a href="/save/?url={{ bounty.link.url|urlencode }}"
+			<a href="{% url 'change_bounty' pk=bounty.pk %}"
 				class="edit">[edit]</a>
 			{% endif %}
 			{% if show_tags %}

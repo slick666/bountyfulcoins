@@ -37,10 +37,12 @@ class Tag(models.Model):
 
 
 class SharedBounty(models.Model):
-    bounty = models.ForeignKey(Bounty, unique=True)
+    bounty = models.ForeignKey(Bounty, unique=True, related_name='shared')
     date = models.DateTimeField(auto_now_add=True)
     votes = models.IntegerField(default=1)
     users_voted = models.ManyToManyField(get_user_model())
+
+    disabled = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s, %s' % (self.bounty, self.votes)

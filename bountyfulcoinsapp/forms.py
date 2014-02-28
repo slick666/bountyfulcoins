@@ -7,7 +7,7 @@ from captcha.fields import ReCaptchaField
 from registration.forms import RegistrationForm as BaseRegistrationForm
 from validate_email import validate_email
 
-from bountyfulcoinsapp.models import Bounty
+from bountyfulcoinsapp.models import Bounty, Tag, SharedBounty, Link
 
 
 class RegistrationForm(BaseRegistrationForm):
@@ -49,6 +49,34 @@ class BountySaveForm(forms.ModelForm):
         label=u'Post to Bountyful Home Page',
         required=False
     )
+
+    def save(self, user=None):
+        """
+        Parse tags, link and user and create/update links to related models
+        """
+        if not user:
+            raise forms.ValidationError(
+                _('Cannot save bouty without a user'))
+        data = self.cleaned_data
+        bounty = super(BountySaveForm, self).save(commit=False)
+        bounty.user = user
+        bounty.link, created = Link.objects.get_or_create(url=data['url'])
+        tag_names = data['tags'].split(',')
+        bounty.tags.clear()  # remove existing tags before assigning new ones
+        for tag_name in tag_names:
+            tag, created = Tag.objects.get_or_create(name=tag_name.strip())
+            bounty.tags.add(tag)
+        bounty.save()
+        self.object = bounty
+
+        if data['share']:
+            shared, created = SharedBounty.objects.get_or_create(
+                bounty=bounty
+            )
+
+            if created:
+                shared.users_voted.add(user)
+                shared.save()
 
 
 class SearchForm(forms.Form):

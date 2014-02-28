@@ -7,7 +7,7 @@
 			Here you can find and share bounties for bitcoins and altcoins!</p>
 	{% else %}
 		<p> Welcome guest!
-			You need to <a href="/login/">login</a>
+			You need to <a href="{% url 'auth_login' %}">login</a>
 			before you can post and share bounties. </p>
 	{% endif %}
 	<h2> Featured Bitcoin and altcoin Bounties Posted </h2>
