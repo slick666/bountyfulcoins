@@ -1,20 +1,46 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from django_webtest import WebTest
 
 from bountyfulcoinsapp.forms import RegistrationForm
 
 
-class TestPageLinks(WebTest):
-    def test_header_contains_links(self):
-        index = self.app.get(reverse('main_page'))
-
-
-class TestRegistration(WebTest):
+class SiteDataMixin(object):
     fixtures = ['users', 'bounties']
     # existing users: admin | qwe123, user | test
 
+    @classmethod
+    def setUpClass(cls):
+        cls.User = get_user_model()
+
+
+class TestHeaderLinks(SiteDataMixin, WebTest):
+    required_links = ('main_page',
+                      'popular',
+                      'about',)
+    logged_out = ('auth_login',
+                  'registration_register',)
+    logged_in = ('auth_logout', 'search',
+                 'create_bounty',)
+
+    def test_header_contains_links(self):
+        # logged out test
+        index = self.app.get(reverse('main_page'))
+        for link in self.required_links + self.logged_out:
+            self.assertTrue(index.click(href=reverse(link), index=0))
+
+        # authenticated test
+        index = self.app.get(reverse('main_page'), user='user')
+        for link in self.required_links + self.logged_in:
+            self.assertTrue(index.click(href=reverse(link), index=0))
+
+        self.assertTrue(index.click(href=reverse(
+            'user_page', args=['user']), index=0))
+
+
+class TestRegistration(SiteDataMixin, WebTest):
     required_fields = ['username', 'email', 'password1', 'password2',
                        'recaptcha_challenge_field']
     good_reg_data = {
@@ -25,10 +51,6 @@ class TestRegistration(WebTest):
         'recaptcha_challenge_field': 'PASSED'
     }
     extra_environ = {'RECAPTCHA_TESTING': 'True'}  # default to passing
-
-    @classmethod
-    def setUpClass(cls):
-        cls.User = get_user_model()
 
     def test_registration_link_work(self):
         index = self.app.get(reverse('main_page'))
@@ -45,22 +67,50 @@ class TestRegistration(WebTest):
         for field, value in data.iteritems():
             form[field] = value
 
+    def _get_filled_form(self, field_name, value=None):
+        reg_page = self.app.get(reverse('registration_register'))
+        regform = reg_page.form
+        data = self.good_reg_data.copy()
+        if value:
+            data[field_name] = value
+        else:
+            data.pop(field_name)
+        self._fill_form(regform, data)
+        return regform
+
     def test_all_fields_are_required(self):
         for field in self.required_fields:
-            regdata = self.good_reg_data.copy()
-            regdata.pop(field)
-            reg_page = self.app.get(reverse('registration_register'))
-            regform = reg_page.form
-            self._fill_form(regform, regdata)
+            regform = self._get_filled_form(field)
             if field == 'recaptcha_challenge_field':
                 continue  # tested seperately below
             self.assertIn(field, RegistrationForm.base_fields)
             original_field = RegistrationForm.base_fields[field]
             req_msg = unicode(original_field.error_messages['required'])
-            self.assertFormError(regform.submit(), 'form', field, [req_msg])
+            self.assertFormError(regform.submit(), 'form', field, req_msg)
 
-    def test_bad_recaptcha(self):
-        pass
+    def test_bad_captcha(self):
+        field_name = 'recaptcha'
+        regform = self._get_filled_form('recaptcha_challenge_field', 'FAILED')
+        original_field = RegistrationForm.base_fields[field_name]
+        err_msg = unicode(original_field.error_messages['captcha_invalid'])
+        self.assertFormError(regform.submit(), 'form', field_name, err_msg)
 
     def test_username_taken(self):
-        reg_page = self.app.get(reverse('registration_register'))
+        regform = self._get_filled_form('username', 'test')
+        err_msg = _("A user with that username already exists.")
+        self.assertFormError(regform.submit(), 'form', 'username', err_msg)
+
+    def test_username_invalid(self):
+        field_name = 'username'
+        regform = self._get_filled_form(field_name, 'user~[]sql=0>')
+        original_field = RegistrationForm.base_fields[field_name]
+        err_msg = unicode(original_field.error_messages['invalid'])
+        self.assertFormError(regform.submit(), 'form', field_name,
+                             err_msg)
+
+    def test_email_taken(self):
+        field_name = 'email'
+        regform = self._get_filled_form(field_name, 'user@example.com')
+        err_msg = RegistrationForm.email_taken_error
+        self.assertFormError(regform.submit(), 'form', field_name,
+                             err_msg)

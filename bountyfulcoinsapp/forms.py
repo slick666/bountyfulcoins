@@ -12,20 +12,21 @@ from bountyfulcoinsapp.models import Bounty, Tag, SharedBounty, Link
 
 class RegistrationForm(BaseRegistrationForm):
     recaptcha = ReCaptchaField(attrs={'theme': 'clean'})
+    email_taken_error = _("This email address is already in use. Please "
+                          "supply a different email address.")
+    invalid_email_error = _("This email does not seem to be a valid address, "
+                            "please try another mail address")
 
     def clean_email(self):
         """ Validate that the supplied email address does not exist """
         User = get_user_model()
         if User.objects.filter(email__iexact=self.cleaned_data['email']):
-            raise forms.ValidationError(_(
-                "This email address is already in use. Please supply a "
-                "different email address."))
-        if not validate_email(self.cleaned_data['email'],
-                              check_mx=settings.CHECK_MX,
-                              verify=settings.CHECK_EMAIL_EXISTS):
-            raise forms.ValidationError(_(
-                "This email does not seem to be a valid address, please try"
-                " another mail address"))
+            raise forms.ValidationError(self.email_taken_error)
+        if settings.CHECK_MX or settings.CHECK_EMAIL_EXISTS:
+            if not validate_email(self.cleaned_data['email'],
+                                  check_mx=settings.CHECK_MX,
+                                  verify=settings.CHECK_EMAIL_EXISTS):
+                raise forms.ValidationError(self.invalid_email_error)
         return self.cleaned_data['email']
 
 
