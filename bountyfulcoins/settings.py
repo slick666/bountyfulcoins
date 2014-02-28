@@ -118,3 +118,9 @@ RECAPTCHA_PRIVATE_KEY = 'PLEASE_USE_REAL_KEY_IN_PRODUCTION'
 # an issue with pydns prevents this from working properly
 CHECK_MX = False
 CHECK_EMAIL_EXISTS = False
+
+FEATURE_POST_MIN_CHARGE = 0.01594
+FEATURE_POST_DAILY_CHARGE = 0.01594
+
+ADDRESSES_LIVE_SYNC = True  # turn this off when running sync in cron
+ADDRESSES_SYNC_FREQUENCE = 60 * 5  # five minutes
