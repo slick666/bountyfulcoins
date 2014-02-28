@@ -30,8 +30,11 @@
 
     ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window
     RECAPTCHA_USE_SSL = True
-    RECAPTCHA_PUBLIC_KEY = '6Ld6Su8SAAAAAEjAGF4Lt3mOzfhK6snc3Ub_SYBt'
-    RECAPTCHA_PRIVATE_KEY = 'PLEASE_USE_REAL_KEY_IN_PRODUCTION'
+
+    # replace with a real key pair from here:
+    # http://www.google.com/recaptcha/whyrecaptcha
+    RECAPTCHA_PUBLIC_KEY = 'THIS_SHOULD_BE_A_REAL_KEY'
+    RECAPTCHA_PRIVATE_KEY = 'THIS_SHOULD_BE_A_REAL_KEY'
 
     # an issue with pydns prevents this from working properly
     CHECK_MX = False
