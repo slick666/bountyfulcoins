@@ -68,12 +68,13 @@ class BountySaveForm(forms.ModelForm):
         bounty.user = user
         bounty.link, created = Link.objects.get_or_create(url=data['url'])
         tag_names = data['tags'].split(',')
+
+        bounty.save()  # first create this record to allow m2m access
+
         bounty.tags.clear()  # remove existing tags before assigning new ones
         for tag_name in tag_names:
             tag, created = Tag.objects.get_or_create(name=tag_name.strip())
             bounty.tags.add(tag)
-        bounty.save()
-        self.object = bounty
 
         if data['share']:
             shared, created = SharedBounty.objects.get_or_create(
@@ -82,7 +83,7 @@ class BountySaveForm(forms.ModelForm):
 
             if created:
                 shared.users_voted.add(user)
-                shared.save()
+        return bounty
 
 
 class SearchForm(forms.Form):
