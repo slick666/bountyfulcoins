@@ -16,7 +16,8 @@ from registration.views import RegistrationView as BaseRegistrationView
 
 from bountyfulcoinsapp.forms import (RegistrationForm, SearchForm,
                                      BountySaveForm)
-from bountyfulcoinsapp.models import Bounty, SharedBounty, Tag
+from bountyfulcoinsapp.models import (Bounty, SharedBounty, FeaturedBounty,
+                                      Tag, calculate_totals)
 
 
 class LoginRequiredMixin(object):
@@ -43,8 +44,11 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
-        shared_bounties = SharedBounty.objects.order_by('-votes')[:50]
-        context['shared_bounties'] = shared_bounties
+        context.update({
+            'shared_bounties': SharedBounty.objects.order_by('-votes')[:50],
+            'featured_bounties': FeaturedBounty.get_funded_entries(),
+            'total_bounties': calculate_totals(),
+        })
         return context
 
 
@@ -79,6 +83,8 @@ class BountyReusableMixin(object):
                 initial['tags'] = ", ".join(tags.values_list('name', flat=True))
             if self.object.shared.exists():
                 initial['share'] = True
+            if self.object.is_featured:
+                initial['featured'] = True
         return initial
 
     def form_valid(self, form):
@@ -92,6 +98,23 @@ class BountyCreate(LoginRequiredMixin, BountyReusableMixin, CreateView):
 
 class BountyChange(LoginRequiredMixin, BountyReusableMixin, UpdateView):
     pass
+
+
+# Views for the Home Page
+class PopularBountiesView(TemplateView):
+    template_name = 'popular_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopularBountiesView, self).get_context_data(**kwargs)
+
+        yesterday = datetime.today() - timedelta(days=1)
+        context = {
+            'shared_bounties': SharedBounty.objects.filter(
+                date__gt=yesterday).order_by('-votes')[:50],
+            'featured_bounties': FeaturedBounty.get_funded_entries(),
+        }
+
+        return context
 
 
 def tag_page(request, tag_name):
@@ -177,21 +200,3 @@ def bounty_vote_page(request):
     if 'HTTP_REFERER' in request.META:
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
     return HttpResponseRedirect('/')
-
-
-def popular_page(request):
-    today = datetime.today()
-    yesterday = today - timedelta(1)
-    shared_bounties = SharedBounty.objects.filter(
-        date__gt=yesterday
-    )
-    shared_bounties = shared_bounties.order_by(
-        '-votes'
-    )[:50]
-
-    variables = RequestContext(request, {
-        'shared_bounties': shared_bounties
-    })
-    return render_to_response('popular_page.html', variables)
-
-    # View for the Logout Page

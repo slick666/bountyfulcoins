@@ -80,6 +80,19 @@ DATABASES = {
     }
 }
 
+# Devserver config
+DEVSERVER_MODULES = (
+    # 'devserver.modules.sql.SQLRealTimeModule',
+    'devserver.modules.sql.SQLSummaryModule',
+    'devserver.modules.profile.ProfileSummaryModule',
+
+    # Modules not enabled by default
+    # 'devserver.modules.ajax.AjaxDumpModule',
+    # 'devserver.modules.profile.MemoryUseModule',
+    # 'devserver.modules.cache.CacheSummaryModule',
+    # 'devserver.modules.profile.LineProfilerModule',
+)
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -105,7 +118,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.static",
     "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages"
+    "django.contrib.messages.context_processors.messages",
+    "bountyfulcoins.context_processors.settings",
 )
 
 LOGGING = {
@@ -138,7 +152,7 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'maxBytes': 20 * 1024 * 1024,
             'backupCount': 5,
-            'filename': os.path.join(PROJECT_ROOT, 'logs', 'panther.log'),
+            'filename': os.path.join(PROJECT_ROOT, 'logs', 'bountyful.log'),
             'formatter': 'default',
         },
     },
@@ -148,8 +162,17 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'werkzeug': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'bountyfulcoinsapp': {
+            'level': 'DEBUG',
+            'propogate': True
+        },
         '': {
-            'handlers': ['file', 'mail_admins'],
+            'handlers': ['console', 'file', 'mail_admins'],
             'level': 'INFO',
             'propagate': True,
         }

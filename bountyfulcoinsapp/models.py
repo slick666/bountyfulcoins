@@ -1,4 +1,9 @@
+from collections import defaultdict
 from datetime import datetime, timedelta
+from decimal import Decimal
+from itertools import groupby
+from operator import itemgetter
+import logging
 
 from django.contrib.auth import get_user_model
 from django.conf import settings
@@ -6,6 +11,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from blockchain_adapter import blockchain
+
+logger = logging.getLogger('bountyfulcoinsapp.models')
 
 
 class Link(models.Model):
@@ -60,6 +67,13 @@ class Bounty(models.Model):
         self.featured.save()
         return self.featured
 
+    @property
+    def is_featured(self):
+        try:
+            return bool(self.featured)
+        except FeaturedBounty.DoesNotExist:
+            return False
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=64, unique=True)
@@ -91,7 +105,7 @@ class Address(models.Model):
 
     verified_balance = models.DecimalField(default=0.00, max_digits=20,
                                            decimal_places=6)
-    last_synced = models.DateTimeField(null=True)
+    last_synced = models.DateTimeField(null=True, blank=True)
 
     @property
     def sync_required(self):
@@ -143,3 +157,24 @@ class FeaturedBounty(models.Model):
                 return self.enabled
         # cannot verify payment was made, return False
         return False
+
+    @classmethod
+    def get_funded_entries(cls):
+        return cls.objects.filter(
+            address__verified_balance__gte=settings.FEATURE_POST_MIN_CHARGE)
+
+
+def calculate_totals():
+    logger.info("calculating totals")
+    bounties = sorted(
+        list(SharedBounty.objects.values_list('bounty__currency',
+                                              'bounty__amount')) +
+        list(FeaturedBounty.get_funded_entries().values_list(
+            'bounty__currency', 'bounty__amount')),
+        key=itemgetter(0))
+    totals = defaultdict(float)
+    for currency, bounty_group in groupby(bounties, itemgetter(0)):
+        logger.info("getting totals for bounty currency %s", currency)
+        totals[currency] += sum(float(b[1]) for b in bounty_group)
+    logger.warn("totals are %s", totals)
+    return dict(totals)

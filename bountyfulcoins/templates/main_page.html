@@ -1,6 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Welcome to Bountyful Coins{% endblock %}
-{% block head %}Welcome to Bountyful Coins{% endblock %}
+
+{% block title %}Welcome to Bountyful Coins{% endblock title %}
+{% block head %}Welcome to Bountyful Coins{% endblock head %}
+
 {% block content %}
 	{% if user.username %}
 		<p>Welcome {{ user.username }}!
@@ -10,6 +12,10 @@
 			You need to <a href="{% url 'auth_login' %}">login</a>
 			before you can post and share bounties. </p>
 	{% endif %}
-	<h2> Featured Bitcoin and altcoin Bounties Posted </h2>
+	<hr>
+	{% include "total_bounties.html" %}
+	<hr>
+	{% include "featured_bounty_list.html" %}
+	<hr>
 	{% include "shared_bounty_list.html" %}
-{% endblock %}
+{% endblock content %}

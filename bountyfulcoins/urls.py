@@ -21,9 +21,9 @@ urlpatterns = patterns(
     # Browsing
     url(r'^$', views.HomePageView.as_view(), name='main_page'),
     url(r'^about/$', views.AboutView.as_view(), name='about'),
+    url(r'^popular/$', views.PopularBountiesView.as_view(), name='popular'),
 
     # FIXME: Refactor points: CBV ME!
-    url(r'^popular/$', views.popular_page, name='popular'),
     url(r'^user/(\w+)/$', views.user_page, name='user_page'),
     url(r'^tag/([^\s]+)/$', views.tag_page, name='tag'),
     url(r'^tag/$', views.tag_cloud_page, name='tag_cloud'),
