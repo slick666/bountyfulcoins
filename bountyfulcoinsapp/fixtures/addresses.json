@@ -1,0 +1,19 @@
+[
+    {
+        "pk": 1,
+        "model": "bountyfulcoinsapp.address",
+        "fields": {
+            "name": "test address",
+            "address_id": "asdfgqwert12345"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "bountyfulcoinsapp.address",
+        "fields": {
+            "name": "test address with balance",
+            "address_id": "asdfgqwert12346",
+            "verified_balance": 1.00
+        }
+    }
+]
