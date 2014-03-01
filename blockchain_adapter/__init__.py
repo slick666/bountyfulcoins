@@ -33,7 +33,7 @@ class BlockChainAdapter(object):
             'confirmations': CONFIRMATIONS_MIN})
         if not res.ok:
             logger.error('Could not get balance, server returned: %s - %s',
-                         res.content)
+                         res.status_code, res.content)
             return None
         return float(res.content)
 
