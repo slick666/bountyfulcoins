@@ -1,7 +1,9 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+
 {% block external %}
 	<script type="text/javascript"
-		src="/site_media/search.js"></script>
+		src="{% static "/site_media/search.js" %}"></script>
 {% endblock %}
 {% block title %}Search Bounties{% endblock %}
 {% block head %}Search Bounties{% endblock %}

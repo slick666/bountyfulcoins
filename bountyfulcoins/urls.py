@@ -1,5 +1,6 @@
 import os
 
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
@@ -39,10 +40,11 @@ urlpatterns = patterns(
     url(r'^search/$', views.search_page, name='search'),
     url(r'^vote/$', views.bounty_vote_page),
 
-    # Site Media
-    url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {
-        'document_root': site_media}),
-
     # Django Admin Page
     url(r'^admin/', include(admin.site.urls)),
 )
+
+if settings.DEBUG:
+    # Site Media
+    urlpatterns += url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': site_media}),
