@@ -8,3 +8,7 @@ class SiteDataMixin(object):
     @classmethod
     def setUpClass(cls):
         cls.User = get_user_model()
+
+    def _fill_form(self, form, data):
+        for field, value in data.iteritems():
+            form[field] = value

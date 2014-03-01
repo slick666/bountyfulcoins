@@ -1,5 +1,9 @@
 <form id="save-form" method="post" action="">
 {% csrf_token %}
 	{{ form.as_p }}
+	{% if object.is_featured %}
+		<p>Address:<span>&nbsp;{{object.featured.address.address_id}}</span></p>
+		<p>Please fund the above address with a minimum of {{ settings.FEATURE_POST_MIN_CHARGE }} to post the featured bounty</p>
+	{% endif %}
 	<input type="submit" value="save" />
 </form>
