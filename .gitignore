@@ -4,3 +4,4 @@
 /bountyfulcoins/host_settings.py
 bountyfulcoins.local.db
 bountyfulcoins/logs/*.log*
+static/
