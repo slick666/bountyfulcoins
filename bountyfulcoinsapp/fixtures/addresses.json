@@ -13,7 +13,7 @@
         "fields": {
             "name": "test address with balance",
             "address_id": "asdfgqwert12346",
-            "verified_balance": 1.00
+            "verified_balance": "1.00"
         }
     }
 ]
