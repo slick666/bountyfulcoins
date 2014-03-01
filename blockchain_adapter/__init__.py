@@ -1,4 +1,5 @@
 import logging
+import os
 import unittest
 
 import requests
@@ -17,14 +18,17 @@ class BlockChainAdapter(object):
 
     Currently supports getting a specified address balance
     """
-    def __init__(self):
-        self.url_base = URL_BASE
-        self.url_balance = URL_BALANCE
+    def __init__(self, *args, **kwargs):
+        self.url_base = kwargs.get('URL_BASE', URL_BASE)
+        self.url_balance = kwargs.get('URL_BALANCE', URL_BALANCE)
 
     def get_balance_url(self, addr):
         return self.url_balance.format(base=self.url_base, addr=addr)
 
     def get_balance(self, address):
+        if 'TEST_BLOCKCHAIN_BALANCE' in os.environ:
+            return float(os.environ['TEST_BLOCKCHAIN_BALANCE'])
+
         res = requests.get(self.get_balance_url(address), params={
             'confirmations': CONFIRMATIONS_MIN})
         if not res.ok:

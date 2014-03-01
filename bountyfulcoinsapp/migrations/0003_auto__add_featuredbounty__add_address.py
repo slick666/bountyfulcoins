@@ -11,7 +11,7 @@ class Migration(SchemaMigration):
         # Adding model 'FeaturedBounty'
         db.create_table(u'bountyfulcoinsapp_featuredbounty', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('shared_bounty', self.gf('django.db.models.fields.related.OneToOneField')(related_name='featured', unique=True, to=orm['bountyfulcoinsapp.SharedBounty'])),
+            ('bounty', self.gf('django.db.models.fields.related.OneToOneField')(related_name='featured', unique=True, null=True, to=orm['bountyfulcoinsapp.Bounty'])),
             ('address', self.gf('django.db.models.fields.related.OneToOneField')(related_name='featured_bounty', unique=True, to=orm['bountyfulcoinsapp.Address'])),
             ('ctime', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
@@ -86,9 +86,9 @@ class Migration(SchemaMigration):
         u'bountyfulcoinsapp.featuredbounty': {
             'Meta': {'object_name': 'FeaturedBounty'},
             'address': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'featured_bounty'", 'unique': 'True', 'to': u"orm['bountyfulcoinsapp.Address']"}),
+            'bounty': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'featured'", 'unique': 'True', 'null': 'True', 'to': u"orm['bountyfulcoinsapp.Bounty']"}),
             'ctime': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'shared_bounty': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'featured'", 'unique': 'True', 'to': u"orm['bountyfulcoinsapp.SharedBounty']"})
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
         u'bountyfulcoinsapp.link': {
             'Meta': {'object_name': 'Link'},
