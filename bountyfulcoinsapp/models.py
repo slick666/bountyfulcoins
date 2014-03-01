@@ -74,10 +74,16 @@ class Address(models.Model):
         return (datetime.now() - self.last_synced) > freq
 
     def sync_verified_balance(self):
+        """
+        Using blockchain.info API get the latest balance of the Address.
+
+        If a good result is returned, store it and update last_synced time.
+        """
         res = blockchain.get_balance()
         if res is not None:
             self.verified_balance = res
             self.last_synced = datetime.now()
+            self.save()
             return True
         return False
 
@@ -98,7 +104,7 @@ class FeaturedBounty(models.Model):
             return True
         elif self.address.last_synced is None or self.address.sync_required:
             res = self.address.sync_verified_balance()
-            if res:
+            if res:  # balance was updated, check again
                 return self.enabled
         # cannot verify payment was made, return False
         return False

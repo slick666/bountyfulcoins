@@ -51,6 +51,11 @@ class BountySaveForm(forms.ModelForm):
         required=False
     )
 
+    def clean_currency(self):
+        # TODO: validate currency is a valid choice ?
+        currency = self.cleaned_data['currency']
+        return currency.strip()
+
     def save(self, user=None):
         """
         Parse tags, link and user and create/update links to related models

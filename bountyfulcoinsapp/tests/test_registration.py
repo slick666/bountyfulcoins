@@ -40,10 +40,6 @@ class TestRegistration(SiteDataMixin, WebTest):
         for field in self.required_fields:
             self.assertIn(field, reg_form.fields)
 
-    def _fill_form(self, form, data):
-        for field, value in data.iteritems():
-            form[field] = value
-
     def _get_filled_form(self, field_name, value=None):
         reg_page = self.app.get(reverse('registration_register'))
         regform = reg_page.form
