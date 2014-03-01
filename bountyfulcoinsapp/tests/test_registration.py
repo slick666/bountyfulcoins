@@ -1,3 +1,5 @@
+import os
+
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
@@ -12,15 +14,20 @@ class TestRegistration(SiteDataMixin, WebTest):
     End to end test of the registration form, view and templates
     """
     required_fields = ['username', 'email', 'password1', 'password2',
-                       'recaptcha_challenge_field']
+                       'recaptcha_response_field']
     good_reg_data = {
         'username': 'test2',
         'email': 'test2@example.com',
         'password1': 'test123',
         'password2': 'test123',
-        'recaptcha_challenge_field': 'PASSED'
+        'recaptcha_response_field': 'PASSED'
     }
-    extra_environ = {'RECAPTCHA_TESTING': 'True'}  # default to passing
+
+    def setUp(self):
+        os.environ['RECAPTCHA_TESTING'] = 'True'
+
+    def tearDown(self):
+        os.environ.pop('RECAPTCHA_TESTING', None)
 
     def test_registration_link_work(self):
         index = self.app.get(reverse('main_page'))
@@ -51,7 +58,7 @@ class TestRegistration(SiteDataMixin, WebTest):
     def test_all_fields_are_required(self):
         for field in self.required_fields:
             regform = self._get_filled_form(field)
-            if field == 'recaptcha_challenge_field':
+            if field == 'recaptcha_response_field':
                 continue  # tested seperately below
             self.assertIn(field, RegistrationForm.base_fields)
             original_field = RegistrationForm.base_fields[field]
@@ -60,15 +67,17 @@ class TestRegistration(SiteDataMixin, WebTest):
 
     def test_bad_captcha(self):
         field_name = 'recaptcha'
-        regform = self._get_filled_form('recaptcha_challenge_field', 'FAILED')
+        regform = self._get_filled_form('recaptcha_response_field', 'FAILED')
         original_field = RegistrationForm.base_fields[field_name]
         err_msg = unicode(original_field.error_messages['captcha_invalid'])
-        self.assertFormError(regform.submit(), 'form', field_name, err_msg)
+        self.assertFormError(regform.submit(), 'form',
+                             field_name, err_msg)
 
     def test_username_taken(self):
         regform = self._get_filled_form('username', 'test')
         err_msg = _("A user with that username already exists.")
-        self.assertFormError(regform.submit(), 'form', 'username', err_msg)
+        self.assertFormError(regform.submit(), 'form',
+                             'username', err_msg)
 
     def test_username_invalid(self):
         field_name = 'username'
@@ -86,5 +95,12 @@ class TestRegistration(SiteDataMixin, WebTest):
                              err_msg)
 
     def test_valid_registration(self):
+        reg_page = self.app.get(reverse('registration_register'))
+        regform = reg_page.form
+        self._fill_form(regform, self.good_reg_data)
+        success = regform.submit()
+        self.assertRedirects(success, reverse('registration_complete'))
+
+    def test_registration_unavailable_to_user(self):
         # TODO: write me
-        pass
+        self.skipTest("Not Implemented")
