@@ -13,6 +13,7 @@ import os
 import os.path
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.join(BASE_DIR, 'bountyfulcoins/')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -21,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'PLEASE_GENERATE_A_NEW_KEY_FOR_PRODUCTION_PLEASE_THANK_YOU'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = True
 
@@ -33,7 +34,7 @@ ADMINS = (
     ('Bountyful Coins', 'contact@bountyfulcoins.com'),
 )
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.bountyfulcoins.com']
 
 # Set the Site ID
 SITE_ID = 1
@@ -66,12 +67,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'bountyfulcoins.urls'
-WSGI_APPLICATION = 'bountyfulcoins.wsgi.application'
-
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -82,6 +79,19 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+# Devserver config
+DEVSERVER_MODULES = (
+    # 'devserver.modules.sql.SQLRealTimeModule',
+    'devserver.modules.sql.SQLSummaryModule',
+    'devserver.modules.profile.ProfileSummaryModule',
+
+    # Modules not enabled by default
+    # 'devserver.modules.ajax.AjaxDumpModule',
+    # 'devserver.modules.profile.MemoryUseModule',
+    # 'devserver.modules.cache.CacheSummaryModule',
+    # 'devserver.modules.profile.LineProfilerModule',
+)
 
 
 # Internationalization
@@ -95,10 +105,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-STATIC_URL = '/static/'
-LOGIN_URL = '/login/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_URL = '/site_media/'
+STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'site_media'),)
 
-
+# Template context processors
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.debug',
     "django.contrib.auth.context_processors.auth",
@@ -107,8 +118,71 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.static",
     "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages"
+    "django.contrib.messages.context_processors.messages",
+    "bountyfulcoins.context_processors.settings",
 )
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+    },
+    'formatters': {
+        'default': {
+            'format': '%(asctime)s - %(process)s - %(levelname)s %(name)s: %(message)s',
+        },
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'default',
+
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 20 * 1024 * 1024,
+            'backupCount': 5,
+            'filename': os.path.join(PROJECT_ROOT, 'logs', 'bountyful.log'),
+            'formatter': 'default',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'werkzeug': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'bountyfulcoinsapp': {
+            'level': 'DEBUG',
+            'propogate': True
+        },
+        '': {
+            'handlers': ['console', 'file', 'mail_admins'],
+            'level': 'INFO',
+            'propagate': True,
+        }
+    }
+}
+
+# Internal bountyful app settings
+ROOT_URLCONF = 'bountyfulcoins.urls'
+WSGI_APPLICATION = 'bountyfulcoins.wsgi.application'
+LOGIN_URL = '/login/'
 
 ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window
 RECAPTCHA_USE_SSL = True
@@ -118,3 +192,9 @@ RECAPTCHA_PRIVATE_KEY = 'PLEASE_USE_REAL_KEY_IN_PRODUCTION'
 # an issue with pydns prevents this from working properly
 CHECK_MX = False
 CHECK_EMAIL_EXISTS = False
+
+FEATURE_POST_MIN_CHARGE = 0.01594
+FEATURE_POST_DAILY_CHARGE = 0.01594
+
+ADDRESSES_LIVE_SYNC = True  # turn this off when running sync in cron
+ADDRESSES_SYNC_FREQUENCE = 60 * 5  # five minutes

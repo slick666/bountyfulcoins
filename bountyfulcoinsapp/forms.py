@@ -7,7 +7,7 @@ from captcha.fields import ReCaptchaField
 from registration.forms import RegistrationForm as BaseRegistrationForm
 from validate_email import validate_email
 
-from bountyfulcoinsapp.models import Bounty, Tag, SharedBounty, Link
+from bountyfulcoinsapp.models import Bounty, Address, Link
 
 
 class RegistrationForm(BaseRegistrationForm):
@@ -31,6 +31,8 @@ class RegistrationForm(BaseRegistrationForm):
 
 
 class BountySaveForm(forms.ModelForm):
+    no_addresses_error = _('No assignable addresses found, '
+                           'cannot feature the bounty at this time')
 
     class Meta:
         model = Bounty
@@ -51,6 +53,21 @@ class BountySaveForm(forms.ModelForm):
         label=u'Post to Bountyful Home Page',
         required=False
     )
+    featured = forms.BooleanField(
+        label=u'Feature this Bounty on Bountyful Home Page',
+        required=False
+    )
+
+    def clean_currency(self):
+        # TODO: validate currency is a valid choice ?
+        currency = self.cleaned_data['currency']
+        return currency.strip()
+
+    def clean_featured(self):
+        if self.cleaned_data.get('featured'):
+            if not Address.get_available_addresses().exists():
+                raise forms.ValidationError(self.no_addresses_error)
+        return self.cleaned_data['featured']
 
     def save(self, user=None):
         """
@@ -63,22 +80,20 @@ class BountySaveForm(forms.ModelForm):
         bounty = super(BountySaveForm, self).save(commit=False)
         bounty.user = user
         bounty.link, created = Link.objects.get_or_create(url=data['url'])
-        tag_names = data['tags'].split(',')
-        bounty.tags.clear()  # remove existing tags before assigning new ones
-        for tag_name in tag_names:
-            tag, created = Tag.objects.get_or_create(name=tag_name.strip())
-            bounty.tags.add(tag)
-        bounty.save()
-        self.object = bounty
+
+        bounty.save()  # first create this record to allow m2m access
+
+        if data['tags']:  # ignore empty string
+            bounty.assign_tags_from_string(data['tags'])
 
         if data['share']:
-            shared, created = SharedBounty.objects.get_or_create(
-                bounty=bounty
-            )
-
+            shared, created = bounty.share()
             if created:
                 shared.users_voted.add(user)
-                shared.save()
+
+        if data['featured']:
+            bounty.feature()
+        return bounty
 
 
 class SearchForm(forms.Form):
