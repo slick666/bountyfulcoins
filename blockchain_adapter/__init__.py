@@ -12,11 +12,13 @@ CONFIRMATIONS_MIN = 6  # min recommended by blockchain docs
 
 
 class BlockChainAdapter(object):
+
     """
     A simple wrapper around requests to query blockchain.info API.
 
     Currently supports getting a specified address balance
     """
+
     def __init__(self):
         self.url_base = URL_BASE
         self.url_balance = URL_BALANCE

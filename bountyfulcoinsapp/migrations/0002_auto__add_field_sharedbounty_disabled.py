@@ -10,14 +10,13 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'SharedBounty.disabled'
         db.add_column(u'bountyfulcoinsapp_sharedbounty', 'disabled',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
+                      self.gf('django.db.models.fields.BooleanField')(
+                          default=False),
                       keep_default=False)
-
 
     def backwards(self, orm):
         # Deleting field 'SharedBounty.disabled'
         db.delete_column(u'bountyfulcoinsapp_sharedbounty', 'disabled')
-
 
     models = {
         u'auth.group': {

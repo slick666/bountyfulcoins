@@ -8,6 +8,7 @@ from .common import SiteDataMixin
 
 
 class TestRegistration(SiteDataMixin, WebTest):
+
     """
     End to end test of the registration form, view and templates
     """

@@ -20,6 +20,7 @@ from bountyfulcoinsapp.models import Bounty, SharedBounty, Tag
 
 
 class LoginRequiredMixin(object):
+
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(LoginRequiredMixin, self).dispatch(
@@ -76,7 +77,8 @@ class BountyReusableMixin(object):
             initial['url'] = self.object.link.url
             tags = self.object.tags.all()
             if tags:
-                initial['tags'] = ", ".join(tags.values_list('name', flat=True))
+                initial['tags'] = ", ".join(
+                    tags.values_list('name', flat=True))
             if self.object.shared:
                 initial['share'] = True
         return initial

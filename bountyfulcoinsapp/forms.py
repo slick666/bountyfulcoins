@@ -31,6 +31,7 @@ class RegistrationForm(BaseRegistrationForm):
 
 
 class BountySaveForm(forms.ModelForm):
+
     class Meta:
         model = Bounty
         exclude = ('link', 'user',)
