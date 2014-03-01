@@ -77,12 +77,12 @@ class BountyReusableMixin(object):
             tags = self.object.tags.all()
             if tags:
                 initial['tags'] = ", ".join(tags.values_list('name', flat=True))
-            if self.object.shared:
+            if self.object.shared.exists():
                 initial['share'] = True
         return initial
 
     def form_valid(self, form):
-        form.save(user=self.request.user)
+        self.object = form.save(user=self.request.user)
         return HttpResponseRedirect(self.get_success_url())
 
 
