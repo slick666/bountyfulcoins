@@ -1,0 +1,6 @@
+<h2>Featured Bounties</h2>
+{% if featured_bounties %}
+	{% include "homepage_bounty_list.html" with bounties=featured_bounties %}
+{% else %}
+	<p>No Featured Bounties Found.</p>
+{% endif %}

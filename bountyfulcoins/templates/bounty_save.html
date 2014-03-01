@@ -1,6 +1,15 @@
 {% extends "base.html" %}
+
 {% block title %}Post a Bounty{% endblock %}
-{% block head %}Post a Bounty{% endblock %}
+{% block head %}
+	{% if object.pk %}
+		Edit Bounty
+	{% else %}
+		Post a Bounty
+	{% endif %}
+{% endblock %}
+
+
 {% block content %}
-{% include "bounty_save_form.html" %}
+	{% include "bounty_save_form.html" %}
 {% endblock %}

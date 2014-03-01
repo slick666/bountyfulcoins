@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -5,10 +6,10 @@
 	<title>
 		Bountyful Coins |
 		 {% block title %}{% endblock %}</title>
-		 <link rel="stylesheet" href="/site_media/style.css"
+		 <link rel="stylesheet" href="{% static "/site_media/style.css" %}"
 		 	type="text/css" />
 		 <script type="text/javascript"
-		 src="/site_media/jquery.js"></script>
+		 src="{% static "/site_media/jquery.js" %}"></script>
 		 {% block external %}{% endblock %}
 </head>
 <body>

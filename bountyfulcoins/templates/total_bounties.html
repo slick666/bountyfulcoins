@@ -1,0 +1,10 @@
+<h2>Total Bounties Posted</h2>
+{% if total_bounties %}
+	<ul>
+		{% for currency, amount in total_bounties.items %}
+			<li>{{amount}} {{currency}}</li>
+		{% endfor %}
+	</ul>
+{% else %}
+	<p>No bounties posted yet!</p>
+{% endif %}

@@ -1,24 +1,40 @@
 [
-{
-    "pk": 1, 
-    "model": "bountyfulcoinsapp.bounty", 
-    "fields": {
-        "currency": "BTC", 
-        "amount": "0", 
-        "link": 1, 
-        "user": 1, 
-        "title": "admin bounty"
+    {
+        "pk": 1, 
+        "model": "bountyfulcoinsapp.bounty", 
+        "fields": {
+            "currency": "BTC", 
+            "amount": "0", 
+            "link": 1, 
+            "user": 1, 
+            "title": "admin bounty"
+        }
+    },
+    {
+        "pk": 2, 
+        "model": "bountyfulcoinsapp.bounty", 
+        "fields": {
+            "currency": "DOGE", 
+            "amount": "2000", 
+            "link": 1, 
+            "user": 2, 
+            "title": "test user bounty"
+        }
+    },
+    {
+        "pk": 1, 
+        "model": "bountyfulcoinsapp.link", 
+        "fields": {
+            "url": "http://www.example.com/bountyful-bounty"
+        }
+    },
+    {
+        "pk": 1, 
+        "model": "bountyfulcoinsapp.featuredbounty", 
+        "fields": {
+            "bounty": 2,
+            "address": 2,
+            "ctime": "2014-02-27T22:19:19.301Z"
+        }
     }
-},
-{
-    "pk": 2, 
-    "model": "bountyfulcoinsapp.bounty", 
-    "fields": {
-        "currency": "DOGE", 
-        "amount": "2000", 
-        "link": 2, 
-        "user": 2, 
-        "title": "test user bounty"
-    }
-}
 ]

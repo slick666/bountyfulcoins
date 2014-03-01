@@ -1,21 +1,6 @@
+<h2>Bitcoin and altcoin Bounties Posted</h2>
 {% if shared_bounties %}
-	<ul class="bounties">
-		{% for shared_bounties in shared_bounties %}
-			<li>
-				<a href="/vote/?id={{ shared_bounties.id}}"
-					class="vote">[+]</a>
-				{{ shared_bounties.bounty.amount }} {{ shared_bounties.bounty.currency}}
-				<a href="{{ shared_bounties.bounty.link.url }}"
-					class="title">
-					{{ shared_bounties.bounty.title }}</a> |
-					Posted By:
-			<a href="/user/{{ shared_bounties.bounty.user.username }}/"
-					class="username">
-					{{ shared_bounties.bounty.user.username }}</a> | 
-				<span class="vote-count">Votes:{{ shared_bounties.votes }}</span>
-			</li>
-		{% endfor %}
-	</ul>
+	{% include "homepage_bounty_list.html" with bounties=shared_bounties %}
 {% else %}
-	<p> No Bounties Found. </p>
+	<p>No Shared Bounties Found.</p>
 {% endif %}

@@ -1,29 +1,23 @@
 from django.contrib import admin
-from bountyfulcoinsapp.models import *
+from bountyfulcoinsapp.models import Link, Tag, Address, Bounty, SharedBounty
 
 
-# Link Model
-class LinkAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(Link, LinkAdmin)
-
-
-# Bounty Model
 class BountyAdmin(admin.ModelAdmin):
     list_display = ('title', 'link', 'user', 'amount', 'currency')
     list_fitler = ('user',)
     ordering = ('title',)
     search_fields = ('title', )
+
+
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('name', 'id', 'verified_balance', 'last_synced')
+    list_fitler = ('last_synced',)
+    ordering = ('verified_balance',)
+    search_fields = ('id', 'name',)
+
+
+admin.site.register(Link)
+admin.site.register(Tag)
+admin.site.register(Address, AddressAdmin)
 admin.site.register(Bounty, BountyAdmin)
-
-
-# Tag Model
-class TagAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(Tag, TagAdmin)
-
-
-# Shared Bounty
-class SharedBountyAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(SharedBounty, SharedBountyAdmin)
+admin.site.register(SharedBounty)
