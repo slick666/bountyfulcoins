@@ -52,6 +52,13 @@ class Bounty(models.Model):
             tag, created = Tag.objects.get_or_create(name=tag_name.strip())
             self.tags.add(tag)
 
+    @property
+    def shared_date(self):
+        try:
+            return self.shared.last().date
+        except SharedBounty.DoesNotExist:
+            return None
+
     def share(self):
         """ Create a SharedBounty for this bounty """
         return SharedBounty.objects.get_or_create(bounty=self)

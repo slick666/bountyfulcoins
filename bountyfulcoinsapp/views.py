@@ -9,8 +9,8 @@ from django.utils.decorators import method_decorator
 
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic import (TemplateView, CreateView,
+                                  UpdateView, DetailView)
 
 from registration.views import RegistrationView as BaseRegistrationView
 
@@ -96,8 +96,21 @@ class BountyCreate(LoginRequiredMixin, BountyReusableMixin, CreateView):
     pass
 
 
-class BountyChange(LoginRequiredMixin, BountyReusableMixin, UpdateView):
+class BountyOwnerOnlyMixin(LoginRequiredMixin):
+    def get_object(self, *args, **kwargs):
+        obj = super(BountyOwnerOnlyMixin, self).get_object(*args, **kwargs)
+        if obj.user != self.request.user:
+            raise Http404('Could not locate the bounty')
+        return obj
+
+
+class BountyChange(BountyOwnerOnlyMixin, BountyReusableMixin, UpdateView):
     pass
+
+
+class BountyDetails(DetailView):
+    template_name = 'bounty_details.html'
+    model = Bounty
 
 
 # Views for the Home Page

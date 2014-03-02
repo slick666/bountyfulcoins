@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Bounty - {{object.title}}{% endblock %}
+{% block head %}Bounty Details{% endblock %}
+
+{% block content %}
+	<h1>{{ object.title }}</h1>
+	<p>Url: <a href="{{ object.link }}">{{ object.link }}</a></p>
+	<p>Amount: {{object.amount}} {{ object.currency }}</p>
+	<p>Keywords: {{object.tags.all|join:", "|default:"None." }}</p>
+	{% if object.is_featured %}
+		<p>This bounty is featured</p>
+	{% endif %}
+	{% if object.shared_date %}
+		<p>Date posted: {{ object.shared_date }}</p>
+	{% endif %}
+	{% if user == object.user %}
+		As the owner of this bounty, you may <a href="{% url 'change_bounty' object.id %}">edit it here.</a>
+	{% else %}
+		<p>Posted by: {{ object.user }}</p>
+	{% endif %}
+	<hr>
+{% endblock %}
