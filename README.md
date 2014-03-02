@@ -16,7 +16,8 @@
     1. `python manage.py syncdb --noinput`
     2. `python manage.py migrate`
     3. `python manage.py collectstatic --noinput`
-    4. `python manage.py compilemessages`
+    
+(in the future we will also support: `python manage.py compilemessages`)
 
 ### Settings (i.e: a `host_settings.py` file)
 
