@@ -173,7 +173,7 @@ LOGGING = {
         },
         'bountyfulcoinsapp': {
             'level': 'DEBUG',
-            'propogate': True
+            'propagate': True
         },
         '': {
             'handlers': ['console', 'file', 'mail_admins'],
