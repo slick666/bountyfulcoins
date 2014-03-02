@@ -60,7 +60,7 @@ class TestBountyCreate(BountyCreateMixin, SiteDataMixin, WebTest):
         self._fill_form(create_form, min_data)
         res = create_form.submit()
         b = Bounty.objects.get(link__url=self.good_data['url'])
-        self.assertRedirects(res, reverse('change_bounty', args=[b.pk]))
+        self.assertRedirects(res, reverse('bounty_details', args=[b.pk]))
 
         for field, value in self.default_data.items():
             self.assertEqual(getattr(b, field), value)
