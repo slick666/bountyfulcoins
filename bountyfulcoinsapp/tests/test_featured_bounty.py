@@ -14,12 +14,13 @@ class TestFeaturedBounty(BountyCreateMixin, SiteDataMixin, WebTest):
 
     def setUp(self):
         super(TestFeaturedBounty, self).setUp()
-        self.good_data['featured'] = True
+        self.data = self.good_data.copy()
+        self.data['featured'] = True
 
     def test_no_assignable_addresses(self):
         Address.objects.get(verified_balance=0.00).delete()  # remove available
         create_form = self._get_bounty_form()
-        self._fill_form(create_form, self.good_data)
+        self._fill_form(create_form, self.data)
         res = create_form.submit()
         self.assertFormError(res, 'form', 'featured',
                              BountySaveForm.no_addresses_error)
@@ -31,12 +32,12 @@ class TestFeaturedBounty(BountyCreateMixin, SiteDataMixin, WebTest):
             return None
 
     def test_create_featured_bounty(self):
-        bounty = self._create_bounty(self.good_data)
+        bounty = self._create_bounty(self.data)
         self.assertIsNotNone(self._get_featured(bounty),
                              'A featured bounty does not exist')
 
     def test_featured_bounty_enabled(self):
-        bounty = self._create_bounty(self.good_data)
+        bounty = self._create_bounty(self.data)
         self.assertIsNotNone(self._get_featured(bounty),
                              'A featured bounty does not exist')
         self.assertFalse(bounty.featured.enabled,
