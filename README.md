@@ -3,6 +3,7 @@
 ### App version 0.2a
 
 [![Build Status](https://travis-ci.org/asfaltboy/bountyfulcoins.png?branch=registration)](https://travis-ci.org/asfaltboy/bountyfulcoins)
+[![Coverage Status](https://coveralls.io/repos/asfaltboy/bountyfulcoins/badge.png)](https://coveralls.io/r/asfaltboy/bountyfulcoins)
 
 
 ## Deployment
