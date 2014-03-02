@@ -165,7 +165,6 @@ class FeaturedBounty(models.Model):
 
 
 def calculate_totals():
-    logger.info("calculating totals")
     bounties = sorted(
         list(SharedBounty.objects.values_list('bounty__currency',
                                               'bounty__amount')) +
@@ -174,7 +173,5 @@ def calculate_totals():
         key=itemgetter(0))
     totals = defaultdict(float)
     for currency, bounty_group in groupby(bounties, itemgetter(0)):
-        logger.info("getting totals for bounty currency %s", currency)
         totals[currency] += sum(float(b[1]) for b in bounty_group)
-    logger.warn("totals are %s", totals)
     return dict(totals)
