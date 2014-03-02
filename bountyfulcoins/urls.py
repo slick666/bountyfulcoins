@@ -14,9 +14,6 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    # Examples:
-    # url(r'^$', 'bountyfulcoins.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
 
     # Browsing
     url(r'^$', views.HomePageView.as_view(), name='main_page'),
@@ -32,11 +29,14 @@ urlpatterns = patterns(
     url(r'^register/$', views.RegistrationView.as_view(),
         name='registration_register'),
     url(r'', include('registration.backends.default.urls')),
+    url(r'^comments/', include('django_comments_xtd.urls')),
 
     # Content Management
     url(r'^bounty/$', views.BountyCreate.as_view(), name='create_bounty'),
     url(r'^bounty/(?P<pk>\d+)$', views.BountyChange.as_view(),
         name='change_bounty'),
+    url(r'^bounty/(?P<pk>\d+)/details$', views.BountyDetails.as_view(),
+        name='bounty_details'),
     url(r'^search/$', views.search_page, name='search'),
     url(r'^vote/$', views.bounty_vote_page),
 
@@ -46,5 +46,6 @@ urlpatterns = patterns(
 
 if settings.DEBUG:
     # Site Media
-    urlpatterns += url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {
-        'document_root': site_media}),
+    urlpatterns += url(
+        r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': site_media}),

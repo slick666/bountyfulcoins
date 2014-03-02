@@ -3,14 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import Http404
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic import (TemplateView, CreateView,
+                                  UpdateView, DetailView)
 
 from registration.views import RegistrationView as BaseRegistrationView
 
@@ -75,7 +74,7 @@ class BountyReusableMixin(object):
     form_class = BountySaveForm
 
     def get_initial(self):
-        initial = self.initial
+        initial = super(BountyReusableMixin, self).get_initial()
         if self.object:
             initial['url'] = self.object.link.url
             tags = self.object.tags.all()
@@ -96,8 +95,21 @@ class BountyCreate(LoginRequiredMixin, BountyReusableMixin, CreateView):
     pass
 
 
-class BountyChange(LoginRequiredMixin, BountyReusableMixin, UpdateView):
+class BountyOwnerOnlyMixin(LoginRequiredMixin):
+    def get_object(self, *args, **kwargs):
+        obj = super(BountyOwnerOnlyMixin, self).get_object(*args, **kwargs)
+        if obj.user != self.request.user:
+            raise Http404('Could not locate the bounty')
+        return obj
+
+
+class BountyChange(BountyOwnerOnlyMixin, BountyReusableMixin, UpdateView):
     pass
+
+
+class BountyDetails(DetailView):
+    template_name = 'bounty_details.html'
+    model = Bounty
 
 
 # Views for the Home Page
