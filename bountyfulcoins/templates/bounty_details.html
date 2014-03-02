@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load comments comments_xtd %}
 
-{% block title %}Bounty - {{object.title}}{% endblock %}
-{% block head %}Bounty Details{% endblock %}
+{% block title %}Bounty - {{object.title}}{% endblock title %}
+{% block head %}Bounty Details{% endblock head %}
 
 {% block content %}
 	<h1>{{ object.title }}</h1>
@@ -20,4 +21,7 @@
 		<p>Posted by: {{ object.user }}</p>
 	{% endif %}
 	<hr>
+	{% url 'bounty_details' object.id as bonty_url %}
+    {% include "comments/form.html" with redirect_url=bonty_url %}
+	{% render_comment_list for object %}
 {% endblock %}

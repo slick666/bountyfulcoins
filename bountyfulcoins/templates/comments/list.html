@@ -1,0 +1,10 @@
+{% load comments %}
+<dl id="comments">
+  {% for comment in comment_list %}
+    {% include "comments/comment.html" %}
+    <div style="margin-left: 50px">
+    	{# nested comments #}
+    	{% render_comment_list for comment %}
+    </div>
+  {% endfor %}
+</dl>

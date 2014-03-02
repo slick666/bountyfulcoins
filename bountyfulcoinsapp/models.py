@@ -1,6 +1,5 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
-from decimal import Decimal
 from itertools import groupby
 from operator import itemgetter
 import logging
@@ -39,7 +38,7 @@ class Bounty(models.Model):
 
     def get_absolute_url(self):
         from django.core.urlresolvers import reverse
-        return reverse('change_bounty', args=[str(self.id)])
+        return reverse('bounty_details', args=[str(self.id)])
 
     def assign_tags_from_string(self, string):
         """

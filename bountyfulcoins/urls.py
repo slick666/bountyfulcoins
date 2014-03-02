@@ -29,6 +29,7 @@ urlpatterns = patterns(
     url(r'^register/$', views.RegistrationView.as_view(),
         name='registration_register'),
     url(r'', include('registration.backends.default.urls')),
+    url(r'^comments/', include('django_comments_xtd.urls')),
 
     # Content Management
     url(r'^bounty/$', views.BountyCreate.as_view(), name='create_bounty'),

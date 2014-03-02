@@ -43,10 +43,11 @@ SITE_ID = 1
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.comments',
     'django.contrib.contenttypes',
+    'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
 
     'django_extensions',
@@ -54,9 +55,12 @@ INSTALLED_APPS = (
     'devserver',
     'registration',
     'captcha',
+    'django_comments_xtd',
 
     'bountyfulcoinsapp',
 )
+
+COMMENTS_APP = "django_comments_xtd"
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -198,3 +202,5 @@ FEATURE_POST_DAILY_CHARGE = 0.01594
 
 ADDRESSES_LIVE_SYNC = True  # turn this off when running sync in cron
 ADDRESSES_SYNC_FREQUENCE = 60 * 5  # five minutes
+
+COMMENTS_XTD_MAX_THREAD_LEVEL = 8

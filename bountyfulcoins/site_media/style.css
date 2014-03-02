@@ -33,3 +33,6 @@ ul.tags, ul.tags li {
 .tag-cloud4 { font-size: 180%; }
 .tag-cloud5 { font-size: 200%; }
 
+#id_honeypot {
+    display: none;
+}
