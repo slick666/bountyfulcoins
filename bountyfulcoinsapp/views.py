@@ -75,7 +75,7 @@ class BountyReusableMixin(object):
     form_class = BountySaveForm
 
     def get_initial(self):
-        initial = self.initial
+        initial = super(BountyReusableMixin, self).get_initial()
         if self.object:
             initial['url'] = self.object.link.url
             tags = self.object.tags.all()

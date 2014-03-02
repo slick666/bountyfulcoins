@@ -37,7 +37,8 @@ class BountySaveForm(forms.ModelForm):
     class Meta:
         model = Bounty
         exclude = ('link', 'user',)
-        fields = ('url', 'title', 'amount', 'currency', 'tags', 'share')
+        fields = ('url', 'title', 'amount', 'currency', 'tags', 'share',
+                  'featured')
 
     url = forms.URLField(
         label=u'Bounty URL',
@@ -55,7 +56,7 @@ class BountySaveForm(forms.ModelForm):
     )
     featured = forms.BooleanField(
         label=u'Feature this Bounty on Bountyful Home Page',
-        required=False
+        required=False,
     )
 
     def clean_currency(self):
@@ -64,7 +65,7 @@ class BountySaveForm(forms.ModelForm):
         return currency.strip()
 
     def clean_featured(self):
-        if self.cleaned_data.get('featured'):
+        if self.cleaned_data['featured']:
             if not Address.get_available_addresses().exists():
                 raise forms.ValidationError(self.no_addresses_error)
         return self.cleaned_data['featured']
