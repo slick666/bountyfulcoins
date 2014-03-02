@@ -6,7 +6,7 @@
 			{{ bounty.bounty.amount }}
 			{{ bounty.bounty.currency}}
 
-			<a href="{{ bounty.bounty.link.url }}" class="title"> {{ bounty.bounty.title }}</a> |
+			<a href="{{ bounty.bounty.get_absolute_url }}" class="title"> {{ bounty.bounty.title }}</a> |
 			Posted By:
 			<a href="/user/{{ bounty.bounty.user.username }}/" class="username"> {{ bounty.bounty.user.username }}</a> |
 			<span class="vote-count">Votes:{{ bounty.votes }}</span>
