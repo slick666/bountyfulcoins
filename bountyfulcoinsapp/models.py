@@ -143,6 +143,21 @@ class Address(models.Model):
         return cls.objects.filter(featured_bounty=None,
                                   verified_balance=0.00)
 
+    @classmethod
+    def bulk_create(cls, addr_list):
+        """
+        A helper method that inserts into the db the passed
+        list of address dicts (excluding existing address ids).
+
+        addr_list=[ {'name': 'abc', 'address_id': '1234'}, ... ]
+        """
+        # get and exclude dupes
+        hashes = [a['address_id'] for a in addr_list]
+        existing = cls.objects.filter(address_id__in=hashes).values_list(
+            'address_id', flat=True)
+        cls.objects.bulk_create([cls(**a) for a in addr_list
+                                if a['address_id'] not in list(existing)])
+
 
 class FeaturedBounty(models.Model):
     class Meta:

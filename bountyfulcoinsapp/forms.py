@@ -1,3 +1,5 @@
+import io
+
 from django import forms
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -8,6 +10,7 @@ from registration.forms import RegistrationForm as BaseRegistrationForm
 from validate_email import validate_email
 
 from bountyfulcoinsapp.models import Bounty, Address, Link
+from bountyfulcoinsapp.utils import get_addresses_from_csv
 
 
 class RegistrationForm(BaseRegistrationForm):
@@ -102,3 +105,20 @@ class SearchForm(forms.Form):
         label=u'Enter a keyword to search bounties',
         widget=forms.TextInput(attrs={'size': 32})
     )
+
+
+class ImportAddressesForm(forms.Form):
+    input_file = forms.FileField()
+
+    def clean_input_file(self):
+        ifile = self.cleaned_data['input_file']
+        try:
+            self.sio = io.StringIO(unicode(ifile.read()), newline=None)
+        except UnicodeDecodeError:
+            raise forms.ValidationError('Only plain text csv files are '
+                                        'currently accepted')
+
+    def save_addresses(self):
+        addresses = get_addresses_from_csv(
+            self.sio, headers=('_', 'address_id'))
+        Address.bulk_create(addresses)

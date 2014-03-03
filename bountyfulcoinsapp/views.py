@@ -1,20 +1,23 @@
 from datetime import datetime, timedelta
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.generic import (TemplateView, CreateView,
                                   UpdateView, DetailView)
+from django.views.generic.edit import BaseFormView
 
 from registration.views import RegistrationView as BaseRegistrationView
 
 from bountyfulcoinsapp.forms import (RegistrationForm, SearchForm,
-                                     BountySaveForm)
+                                     BountySaveForm, ImportAddressesForm)
 from bountyfulcoinsapp.models import (Bounty, SharedBounty, FeaturedBounty,
                                       Tag, calculate_totals)
 
@@ -212,3 +215,33 @@ def bounty_vote_page(request):
     if 'HTTP_REFERER' in request.META:
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
     return HttpResponseRedirect('/')
+
+
+class ImportAddressView(BaseFormView):
+    success_url = reverse_lazy('admin:bountyfulcoinsapp_address_changelist')
+    form_class = ImportAddressesForm
+    http_method_names = ['post']
+    filetype = 'csv'  # default to csv
+
+    def form_valid(self, form):
+        """
+        If the form is valid, save the file data into db.
+        """
+        form.save_addresses()
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _('Succesfully imported addresses form file.')
+        )
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        """
+        If the form is valid, save the file data into db.
+        """
+        for field, v in form.errors.items():
+            error = '%s: %s' % (field, ', '.join([unicode(e) for e in v]))
+            messages.add_message(
+                self.request, messages.ERROR,
+                error
+            )
+        return HttpResponseRedirect(self.get_success_url())
