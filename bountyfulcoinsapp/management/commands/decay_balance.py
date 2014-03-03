@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from bountyfulapp.models import Address
+from bountyfulcoinsapp.models import Address
 
 
 class Command(BaseCommand):
