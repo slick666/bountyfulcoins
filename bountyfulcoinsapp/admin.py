@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from bountyfulcoinsapp.models import Link, Tag, Address, Bounty, SharedBounty
 
 

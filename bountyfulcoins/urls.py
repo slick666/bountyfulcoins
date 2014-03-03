@@ -37,6 +37,9 @@ urlpatterns = patterns(
         name='change_bounty'),
     url(r'^bounty/(?P<pk>\d+)/details$', views.BountyDetails.as_view(),
         name='bounty_details'),
+    url(r'^admin/bountyfulcoinsapp/address/import/$',
+        views.ImportAddressView.as_view(filetype='csv'),
+        name='import_address_csv'),
     url(r'^search/$', views.search_page, name='search'),
     url(r'^vote/$', views.bounty_vote_page),
 

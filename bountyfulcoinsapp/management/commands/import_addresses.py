@@ -1,8 +1,7 @@
-import csv
-
 from django.core.management.base import LabelCommand
 
 from bountyfulcoinsapp.models import Address
+from bountyfulcoinsapp.utils import get_addresses_from_file
 
 
 class Command(LabelCommand):
@@ -11,10 +10,7 @@ class Command(LabelCommand):
     label = 'file'
 
     def handle_label(self, filename, **options):
-        addresses = []
         with open(filename, 'rbU') as csvfile:
-            for addr in csv.DictReader(csvfile, fieldnames=(
-                    '_', 'address_id')):
-                del addr['_']
-                addresses.append(addr)
+            addresses = get_addresses_from_file(
+                csvfile, headers=('_', 'address_id'))
         Address.bulk_create(addresses)
