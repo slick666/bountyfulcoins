@@ -16,6 +16,8 @@
     1. `python manage.py syncdb --noinput`
     2. `python manage.py migrate`
     3. `python manage.py collectstatic --noinput`
+6. Run or restart your wsgi server.
+7. Enter the site's `admin` panel and configure the correct [Site hostname](https://docs.djangoproject.com/en/1.6/ref/contrib/sites/).
     
 (in the future we will also support: `python manage.py compilemessages`)
 
