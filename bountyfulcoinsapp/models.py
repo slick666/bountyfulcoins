@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import timedelta
 from itertools import groupby
 from operator import itemgetter
 import logging
@@ -7,6 +7,7 @@ import logging
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from blockchain_adapter import blockchain
@@ -23,6 +24,7 @@ class Link(models.Model):
 
 class Bounty(models.Model):
     class Meta:
+        ordering = ['-id']
         verbose_name_plural = 'Bounties'
 
     link = models.ForeignKey(Link, verbose_name=_('Bounty URL'))
@@ -65,7 +67,7 @@ class Bounty(models.Model):
     def feature(self):
         """ Create a FeaturedBounty for this bounty """
         try:
-            addr = Address.get_available_addresses().get()
+            addr = Address.get_available_addresses().first()
         except Address.DoesNotExist:
             raise Exception('No assignable addresses found, '
                             'cannot feature this bounty')
@@ -82,6 +84,9 @@ class Bounty(models.Model):
 
 
 class Tag(models.Model):
+    class Meta:
+        ordering = ['name']
+
     name = models.CharField(max_length=64, unique=True)
     bounties = models.ManyToManyField(Bounty, related_name='tags')
 
@@ -91,10 +96,11 @@ class Tag(models.Model):
 
 class SharedBounty(models.Model):
     class Meta:
+        ordering = ['-votes', '-date']
         verbose_name_plural = 'Shared bounties'
 
     bounty = models.ForeignKey(Bounty, unique=True, related_name='shared')
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
     votes = models.IntegerField(default=1)
     users_voted = models.ManyToManyField(get_user_model())
 
@@ -118,7 +124,7 @@ class Address(models.Model):
         if not settings.ADDRESSES_LIVE_SYNC:
             return False
         freq = timedelta(seconds=settings.ADDRESSES_SYNC_FREQUENCE)
-        return (datetime.now() - self.last_synced) > freq
+        return (timezone.now() - self.last_synced) > freq
 
     def sync_verified_balance(self):
         """
@@ -129,7 +135,7 @@ class Address(models.Model):
         res = blockchain.get_balance(self.address_id)
         if res is not None:
             self.verified_balance = res
-            self.last_synced = datetime.now()
+            self.last_synced = timezone.now()
             self.save()
             return True
         return False
@@ -161,12 +167,13 @@ class Address(models.Model):
 
 class FeaturedBounty(models.Model):
     class Meta:
+        ordering = ['-ctime']
         verbose_name_plural = 'Featured bounties'
 
     bounty = models.OneToOneField(Bounty, related_name='featured', null=True)
     address = models.OneToOneField(Address, unique=True,
                                    related_name='featured_bounty')
-    ctime = models.DateTimeField(auto_now_add=True)
+    ctime = models.DateTimeField(default=timezone.now)
 
     @property
     def enabled(self):
