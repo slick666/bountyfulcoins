@@ -1,6 +1,6 @@
 # Bountyful Coins Bounty Directory
 
-### App version 0.3
+### App version 0.4
 
 [![Build Status](https://travis-ci.org/asfaltboy/bountyfulcoins.png?branch=registration)](https://travis-ci.org/asfaltboy/bountyfulcoins)
 [![Coverage Status](https://coveralls.io/repos/asfaltboy/bountyfulcoins/badge.png)](https://coveralls.io/r/asfaltboy/bountyfulcoins)
