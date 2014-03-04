@@ -87,6 +87,6 @@ to be repeated)
 
         git checkout tags/<previous_tag_name>
 
-5. If reverted to a previous version, migration should be run back to the previous version by running:
+5. If reverted to a previous version, and new version had a new migration, then south migrations should be reversed back to the previous version by running:
 
-        python manage.py migrate
+        python manage.py migrate bountyfullapp <previous migration>
