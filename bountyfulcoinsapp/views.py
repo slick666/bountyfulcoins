@@ -48,7 +48,8 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
         context.update({
-            'shared_bounties': SharedBounty.objects.order_by('-votes')[:50],
+            'shared_bounties': SharedBounty.objects.filter(
+                disabled=False)[:50],
             'featured_bounties': FeaturedBounty.get_funded_entries(),
             'total_bounties': calculate_totals(),
         })
@@ -62,7 +63,7 @@ class AboutView(TemplateView):
 # View of the User Page.
 def user_page(request, username):
     user = get_object_or_404(User, username=username)
-    bounties = user.bounty_set.order_by('-id')
+    bounties = user.bounty_set.all()
     variables = RequestContext(request, {
         'bounties': bounties,
         'username': username,
@@ -126,7 +127,7 @@ class PopularBountiesView(TemplateView):
         yesterday = timezone.now() - timedelta(days=1)
         context = {
             'shared_bounties': SharedBounty.objects.filter(
-                date__gt=yesterday).order_by('-votes')[:50],
+                date__gt=yesterday, disabled=False)[:50],
             'featured_bounties': FeaturedBounty.get_funded_entries(),
         }
 
@@ -135,7 +136,7 @@ class PopularBountiesView(TemplateView):
 
 def tag_page(request, tag_name):
     tag = get_object_or_404(Tag, name=tag_name)
-    bounties = tag.bounties.order_by('-id')
+    bounties = tag.bounties.all()
     variables = RequestContext(request, {
         'bounties': bounties,
         'tag_name': tag_name,
@@ -147,7 +148,7 @@ def tag_page(request, tag_name):
 
 def tag_cloud_page(request):
     MAX_WEIGHT = 5
-    tags = Tag.objects.order_by('name')
+    tags = Tag.objects.all()
     # Calculate tag, minimum and maximum counts.
     min_count = max_count = tags[0].bounties.count()
     for tag in tags:

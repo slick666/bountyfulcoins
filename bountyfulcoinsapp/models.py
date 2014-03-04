@@ -24,6 +24,7 @@ class Link(models.Model):
 
 class Bounty(models.Model):
     class Meta:
+        ordering = ['-id']
         verbose_name_plural = 'Bounties'
 
     link = models.ForeignKey(Link, verbose_name=_('Bounty URL'))
@@ -83,6 +84,9 @@ class Bounty(models.Model):
 
 
 class Tag(models.Model):
+    class Meta:
+        ordering = ['name']
+
     name = models.CharField(max_length=64, unique=True)
     bounties = models.ManyToManyField(Bounty, related_name='tags')
 
@@ -92,6 +96,7 @@ class Tag(models.Model):
 
 class SharedBounty(models.Model):
     class Meta:
+        ordering = ['-votes', '-date']
         verbose_name_plural = 'Shared bounties'
 
     bounty = models.ForeignKey(Bounty, unique=True, related_name='shared')
@@ -162,6 +167,7 @@ class Address(models.Model):
 
 class FeaturedBounty(models.Model):
     class Meta:
+        ordering = ['-ctime']
         verbose_name_plural = 'Featured bounties'
 
     bounty = models.OneToOneField(Bounty, related_name='featured', null=True)

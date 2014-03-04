@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.utils import unittest
 
 from django_webtest import WebTest
 from webtest import AppError
@@ -107,3 +108,10 @@ class TestBountyChange(SiteDataMixin, WebTest):
         self.assertRedirects(res, "{login_url}?next={edit_url}".format(
             login_url=reverse('auth_login'),
             edit_url=url))
+
+
+@unittest.skip('Test unwritted yet')
+class TestBountyViews(SiteDataMixin, WebTest):
+    def test_bounties_ordering():
+        # TODO: write me
+        pass
