@@ -36,6 +36,19 @@ class TestFeaturedBounty(BountyCreateMixin, SiteDataMixin, WebTest):
         self.assertIsNotNone(self._get_featured(bounty),
                              'A featured bounty does not exist')
 
+    def test_create_multiple_addresses_available(self):
+        Address.objects.create(address_id='randomnewaddress123')
+        bounty = self._create_bounty(self.data)
+        self.assertIsNotNone(self._get_featured(bounty),
+                             'A featured bounty does not exist')
+
+    def test_create_no_addresses_available(self):
+        Address.objects.all().delete()
+        self.assertRaises(
+            Exception, self._create_bounty, self.data,
+            'Featuring a bounty without available addresses should have '
+            'raised an exception')
+
     def test_featured_bounty_enabled(self):
         bounty = self._create_bounty(self.data)
         self.assertIsNotNone(self._get_featured(bounty),

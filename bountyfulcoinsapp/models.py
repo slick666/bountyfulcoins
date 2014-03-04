@@ -65,7 +65,7 @@ class Bounty(models.Model):
     def feature(self):
         """ Create a FeaturedBounty for this bounty """
         try:
-            addr = Address.get_available_addresses().get()
+            addr = Address.get_available_addresses().first()
         except Address.DoesNotExist:
             raise Exception('No assignable addresses found, '
                             'cannot feature this bounty')
