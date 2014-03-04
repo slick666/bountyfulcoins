@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -13,6 +13,7 @@ from django.template import RequestContext
 from django.views.generic import (TemplateView, CreateView,
                                   UpdateView, DetailView)
 from django.views.generic.edit import BaseFormView
+from django.utils import timezone
 
 from registration.views import RegistrationView as BaseRegistrationView
 
@@ -122,7 +123,7 @@ class PopularBountiesView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopularBountiesView, self).get_context_data(**kwargs)
 
-        yesterday = datetime.today() - timedelta(days=1)
+        yesterday = timezone.now() - timedelta(days=1)
         context = {
             'shared_bounties': SharedBounty.objects.filter(
                 date__gt=yesterday).order_by('-votes')[:50],

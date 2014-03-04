@@ -1,8 +1,9 @@
 import mock
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 from django.conf import settings
 from django.test import TestCase
+from django.utils import timezone
 
 from bountyfulcoinsapp.models import Address
 
@@ -19,12 +20,12 @@ class TestAddressMethods(TestCase):
             self.assertFalse(self.addr1.sync_required,
                              "Sync should not be required")
 
-        old_sync = datetime.now() - timedelta(
+        old_sync = timezone.now() - timedelta(
             settings.ADDRESSES_SYNC_FREQUENCE + 1)
         self.addr2.last_synced = old_sync
         self.assertTrue(self.addr2.sync_required, "Sync should be required")
 
-        future_sync = datetime.now() + timedelta(minutes=1)
+        future_sync = timezone.now() + timedelta(minutes=1)
         self.addr2.last_synced = future_sync
         self.assertFalse(self.addr2.sync_required,
                          "Sync should not be required")
