@@ -5,12 +5,15 @@ from operator import itemgetter
 import logging
 
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from blockchain_adapter import blockchain
+
+from utils import get_protocol, get_authenticated_twitter_api
 
 logger = logging.getLogger('bountyfulcoinsapp.models')
 
@@ -34,6 +37,7 @@ class Bounty(models.Model):
                                  max_digits=20, decimal_places=2)
     currency = models.CharField(_('Bounty Currency'), default='BTC',
                                 max_length=15)
+    ctime = models.DateTimeField(default=timezone.now)
 
     def __unicode__(self):
         return u'%s, %s' % (self.user.username, self.link.url)
@@ -41,6 +45,14 @@ class Bounty(models.Model):
     def get_absolute_url(self):
         from django.core.urlresolvers import reverse
         return reverse('bounty_details', args=[str(self.id)])
+
+    @property
+    def full_url(self):
+        return u"{protocol}{domain}{path}".format(
+            protocol=get_protocol(getattr(self, '_request', None)),
+            domain=Site.objects.get_current().domain.strip(' /'),
+            path=self.get_absolute_url(),
+        )
 
     def assign_tags_from_string(self, string):
         """
@@ -70,7 +82,7 @@ class Bounty(models.Model):
             addr = Address.get_available_addresses().first()
         except Address.DoesNotExist:
             raise Exception('No assignable addresses found, '
-                            'cannot feature this bounty')
+                            'cannot feature bounty')
         self.featured = FeaturedBounty.objects.create(address=addr, bounty=self)
         return self.featured
 
@@ -80,6 +92,20 @@ class Bounty(models.Model):
             return bool(self.featured)
         except FeaturedBounty.DoesNotExist:
             return False
+
+    def _get_tweet(self, request=None):
+        self._request = request
+        msg = (u"{b.ctime:%A} #bitcoin bounty paying {b.amount}"
+               u" in {b.currency} {b.full_url} #bountyful").format(b=self)
+        if hasattr(self, '_request'):
+            delattr(self, '_request')
+        return msg
+
+    def send_tweet(self, request=None):
+        logger.debug('Entering send_tweet')
+        tweeter_status = self._get_tweet(request)
+        api = get_authenticated_twitter_api()
+        api.update_status(tweeter_status)
 
 
 class Tag(models.Model):
