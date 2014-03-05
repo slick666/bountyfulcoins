@@ -48,8 +48,7 @@ class BountySaveForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'size': 128}),
     )
     tags = forms.CharField(
-        label=u'Tags',
-        required=False,
+        label=u'Tags', required=False,
         widget=forms.TextInput(attrs={'size': 64}),
         help_text=_('Please enter a comma seperated list of tags')
     )
@@ -58,9 +57,10 @@ class BountySaveForm(forms.ModelForm):
         required=False
     )
     featured = forms.BooleanField(
-        label=u'Feature this Bounty on Bountyful Home Page',
+        label=u'Feature to Bountyful Home Page',
         required=False,
     )
+    tweet = forms.BooleanField(label=u'Publish to Twitter', required=False)
 
     def clean_currency(self):
         # TODO: validate currency is a valid choice ?
@@ -84,7 +84,7 @@ class BountySaveForm(forms.ModelForm):
         bounty = super(BountySaveForm, self).save(commit=False)
         bounty.user = user
         bounty.link, created = Link.objects.get_or_create(url=data['url'])
-
+        new_bounty = bool(bounty.pk)
         bounty.save()  # first create this record to allow m2m access
 
         if data['tags']:  # ignore empty string
@@ -97,6 +97,10 @@ class BountySaveForm(forms.ModelForm):
 
         if data['featured'] and not bounty.is_featured:
             bounty.feature()
+
+        if data.get('tweet') and not new_bounty:
+            bounty.send_tweet()
+
         return bounty
 
 
