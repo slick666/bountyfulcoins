@@ -36,3 +36,15 @@ ul.tags, ul.tags li {
 #id_honeypot {
     display: none;
 }
+
+input[type="number"], input[type="text"] {
+	width: 200px;
+}
+
+input[type="checkbox"] {
+	display: inline-block;
+}
+
+input[type="submit"] {
+	width: 100px;
+}
