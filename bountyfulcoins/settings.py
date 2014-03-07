@@ -204,3 +204,8 @@ ADDRESSES_LIVE_SYNC = True  # turn this off when running sync in cron
 ADDRESSES_SYNC_FREQUENCE = 60 * 5  # five minutes
 
 COMMENTS_XTD_MAX_THREAD_LEVEL = 8
+
+TWITTER_CONSUMER_KEY = 'type in your consumer key here'
+TWITTER_CONSUMER_SECRET = 'type in your consumer secret here'
+TWITTER_ACCESS_TOKEN = 'type in your access token here'
+TWITTER_ACCESS_TOKEN_SECRET = 'type in your access token secret here'

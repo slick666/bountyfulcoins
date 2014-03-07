@@ -48,8 +48,7 @@ class BountySaveForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'size': 128}),
     )
     tags = forms.CharField(
-        label=u'Tags',
-        required=False,
+        label=u'Tags', required=False,
         widget=forms.TextInput(attrs={'size': 64}),
         help_text=_('Please enter a comma seperated list of tags')
     )
@@ -58,7 +57,7 @@ class BountySaveForm(forms.ModelForm):
         required=False
     )
     featured = forms.BooleanField(
-        label=u'Feature this Bounty on Bountyful Home Page',
+        label=u'Feature to Bountyful Home Page',
         required=False,
     )
 
@@ -73,7 +72,7 @@ class BountySaveForm(forms.ModelForm):
                 raise forms.ValidationError(self.no_addresses_error)
         return self.cleaned_data['featured']
 
-    def save(self, user=None):
+    def save(self, user=None, request=None):
         """
         Parse tags, link and user and create/update links to related models
         """
@@ -84,7 +83,7 @@ class BountySaveForm(forms.ModelForm):
         bounty = super(BountySaveForm, self).save(commit=False)
         bounty.user = user
         bounty.link, created = Link.objects.get_or_create(url=data['url'])
-
+        new_bounty = bool(bounty.pk)
         bounty.save()  # first create this record to allow m2m access
 
         if data['tags']:  # ignore empty string
@@ -97,6 +96,10 @@ class BountySaveForm(forms.ModelForm):
 
         if data['featured'] and not bounty.is_featured:
             bounty.feature()
+
+        if (data['featured'] or data['share']) and not new_bounty:
+            bounty.send_tweet(request)
+
         return bounty
 
 

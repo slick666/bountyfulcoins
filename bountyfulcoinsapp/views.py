@@ -92,7 +92,7 @@ class BountyReusableMixin(object):
         return initial
 
     def form_valid(self, form):
-        self.object = form.save(user=self.request.user)
+        self.object = form.save(user=self.request.user, request=self.request)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -109,7 +109,10 @@ class BountyOwnerOnlyMixin(LoginRequiredMixin):
 
 
 class BountyChange(BountyOwnerOnlyMixin, BountyReusableMixin, UpdateView):
-    pass
+    def get_form(self, form_class):
+        form = super(BountyChange, self).get_form(form_class)
+        form.fields.pop('tweet', None)
+        return form
 
 
 class BountyDetails(DetailView):
