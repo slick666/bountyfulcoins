@@ -60,7 +60,6 @@ class BountySaveForm(forms.ModelForm):
         label=u'Feature to Bountyful Home Page',
         required=False,
     )
-    tweet = forms.BooleanField(label=u'Publish to Twitter', required=False)
 
     def clean_currency(self):
         # TODO: validate currency is a valid choice ?
@@ -73,7 +72,7 @@ class BountySaveForm(forms.ModelForm):
                 raise forms.ValidationError(self.no_addresses_error)
         return self.cleaned_data['featured']
 
-    def save(self, user=None):
+    def save(self, user=None, request=None):
         """
         Parse tags, link and user and create/update links to related models
         """
@@ -98,8 +97,8 @@ class BountySaveForm(forms.ModelForm):
         if data['featured'] and not bounty.is_featured:
             bounty.feature()
 
-        if data.get('tweet') and not new_bounty:
-            bounty.send_tweet()
+        if (data['featured'] or data['share']) and not new_bounty:
+            bounty.send_tweet(request)
 
         return bounty
 

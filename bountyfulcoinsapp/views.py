@@ -92,7 +92,7 @@ class BountyReusableMixin(object):
         return initial
 
     def form_valid(self, form):
-        self.object = form.save(user=self.request.user)
+        self.object = form.save(user=self.request.user, request=self.request)
         return HttpResponseRedirect(self.get_success_url())
 
 
