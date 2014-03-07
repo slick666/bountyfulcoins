@@ -226,5 +226,5 @@ def calculate_totals():
         key=itemgetter(0))
     totals = defaultdict(float)
     for currency, bounty_group in groupby(bounties, itemgetter(0)):
-        totals[currency] += sum(float(b[1]) for b in bounty_group)
+        totals[currency] += sum(float(b[1] or 0.0) for b in bounty_group)
     return dict(totals)
