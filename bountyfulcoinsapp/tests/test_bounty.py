@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 from django.utils import unittest
 
 from django_webtest import WebTest
+from mock import Mock
 from webtest import AppError
 
 from bountyfulcoinsapp.models import Bounty
@@ -25,6 +26,7 @@ class BountyCreateMixin(object):
             'share': False,  # defaults to False
             'featured': False,  # defaults to False
         }
+        Bounty.send_tweet = Mock()
 
     def _get_bounty_form(self, new=True, pk=None):
         if new:
