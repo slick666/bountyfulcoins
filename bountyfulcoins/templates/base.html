@@ -5,12 +5,13 @@
 <head>
 	<title>
 		Bountyful Coins |
-		 {% block title %}{% endblock %}</title>
-		 <link rel="stylesheet" href="{% static "/site_media/style.css" %}"
-		 	type="text/css" />
-		 <script type="text/javascript"
-		 src="{% static "/site_media/jquery.js" %}"></script>
-		 {% block external %}{% endblock %}
+		{% block title %}{% endblock %}</title>
+		<link rel="stylesheet" href="{% static "/site_media/style.css" %}"
+			type="text/css" />
+		<script type="text/javascript" src="{% static "/site_media/jquery.js" %}"></script>
+		{# <script type="text/javascript" src="{% static "/site_media/bitcoinaddress-bundle.js" %}"></script> #}
+		<script type="text/javascript" src="{% static "/site_media/bitcoinaddress-bundle.min.js" %}"></script>
+		{% block external %}{% endblock %}
 </head>
 <body>
 	<div id="nav">

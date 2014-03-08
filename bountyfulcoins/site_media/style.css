@@ -45,6 +45,30 @@ input[type="checkbox"] {
 	display: inline-block;
 }
 
-input[type="submit"] {
+.submit-buttons input[type="submit"] {
 	width: 100px;
+	display: inline-block;
+}
+
+/* Action hints are slidedowns, hidden by default */
+.bitcoin-action-hint {
+    display: none;
+}
+
+/* Show dashed underlining so people get a hint it's clickable */
+.bitcoin-address-container .bitcoin-address {
+    border-bottom: 1px dashed gray;
+    cursor: pointer;
+}
+
+/* Center QR code image */
+.bitcoin-address-qr-container > img,
+.bitcoin-address-qr-container > canvas {
+    margin: 0 auto;
+}
+
+/* bitcoinprices.js -  for bitcoinprices, donation nominated in USD */
+.clickable-price {
+    cursor: pointer;
+    border-bottom: 1px #888 dashed;
 }

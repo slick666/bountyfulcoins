@@ -216,6 +216,14 @@ class FeaturedBounty(models.Model):
         return cls.objects.filter(
             address__verified_balance__gte=settings.FEATURE_POST_MIN_CHARGE)
 
+    @property
+    def target_address(self):
+        """
+        A wrapper property around the fwd address functionality falling
+        back to using one of our available 0 addresses.
+        """
+        return self.address.address_id
+
 
 def calculate_totals():
     bounties = sorted(

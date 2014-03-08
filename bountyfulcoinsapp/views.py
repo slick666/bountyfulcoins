@@ -114,6 +114,11 @@ class BountyChange(BountyOwnerOnlyMixin, BountyReusableMixin, UpdateView):
         form.fields.pop('tweet', None)
         return form
 
+    def get_success_url(self):
+        if '_redirect' not in self.request.REQUEST and self.object:
+            return reverse_lazy('change_bounty', args=[self.object.pk])
+        return super(BountyChange, self).get_success_url()
+
 
 class BountyDetails(DetailView):
     template_name = 'bounty_details.html'
