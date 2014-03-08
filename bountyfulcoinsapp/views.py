@@ -91,6 +91,11 @@ class BountyReusableMixin(object):
                 initial['featured'] = True
         return initial
 
+    def get_success_url(self):
+        if '_redirect' not in self.request.REQUEST and self.object:
+            return reverse_lazy('change_bounty', args=[self.object.pk])
+        return super(BountyReusableMixin, self).get_success_url()
+
     def form_valid(self, form):
         self.object = form.save(user=self.request.user, request=self.request)
         return HttpResponseRedirect(self.get_success_url())
@@ -109,15 +114,7 @@ class BountyOwnerOnlyMixin(LoginRequiredMixin):
 
 
 class BountyChange(BountyOwnerOnlyMixin, BountyReusableMixin, UpdateView):
-    def get_form(self, form_class):
-        form = super(BountyChange, self).get_form(form_class)
-        form.fields.pop('tweet', None)
-        return form
-
-    def get_success_url(self):
-        if '_redirect' not in self.request.REQUEST and self.object:
-            return reverse_lazy('change_bounty', args=[self.object.pk])
-        return super(BountyChange, self).get_success_url()
+    pass
 
 
 class BountyDetails(DetailView):
