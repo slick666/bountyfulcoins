@@ -48,6 +48,7 @@ class BountySaveForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'size': 128}),
     )
     tags = forms.CharField(
+
         label=u'Tags', required=False,
         widget=forms.TextInput(attrs={'size': 64}),
         help_text=_('Please enter a comma seperated list of tags')
@@ -57,6 +58,7 @@ class BountySaveForm(forms.ModelForm):
         required=False
     )
     featured = forms.BooleanField(
+
         label=u'Feature to Bountyful Home Page',
         required=False,
     )
