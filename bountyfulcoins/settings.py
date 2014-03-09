@@ -34,7 +34,10 @@ ADMINS = (
     ('Bountyful Coins', 'contact@bountyfulcoins.com'),
 )
 
-ALLOWED_HOSTS = ['.bountyfulcoins.com']
+ALLOWED_HOSTS = [
+    '.bountyfulcoins.com',
+    '127.0.0.1',
+    ]
 
 # Set the Site ID
 SITE_ID = 1

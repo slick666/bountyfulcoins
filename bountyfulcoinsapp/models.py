@@ -34,7 +34,7 @@ class Bounty(models.Model):
     title = models.CharField(_('Bounty Title'), max_length=200)
     user = models.ForeignKey(get_user_model())
     amount = models.DecimalField(_('Bounty Amount'), default=0.00,
-                                 max_digits=20, decimal_places=2)
+                                 max_digits=20, decimal_places=8)
     currency = models.CharField(_('Bounty Currency'), default='BTC',
                                 max_length=15)
     ctime = models.DateTimeField(default=timezone.now)
