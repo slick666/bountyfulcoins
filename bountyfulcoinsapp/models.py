@@ -95,7 +95,7 @@ class Bounty(models.Model):
 
     def _get_tweet(self, request=None):
         self._request = request
-        msg = (u"{b.ctime:%A} #bitcoin bounty paying {b.amount}"
+        msg = (u"{b.ctime:%A} #bitcoin bounty paying #{b.amount}"
                u" in {b.currency} {b.full_url} #bountyful").format(b=self)
         if hasattr(self, '_request'):
             delattr(self, '_request')
