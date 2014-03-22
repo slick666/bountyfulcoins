@@ -53,12 +53,13 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.staticfiles',
 
-    'django_extensions',
-    'south',
-    'devserver',
-    'registration',
+    'bootstrap3',
     'captcha',
+    'devserver',
     'django_comments_xtd',
+    'django_extensions',
+    'registration',
+    'south',
 
     'bountyfulcoinsapp',
 )

@@ -1,12 +1,28 @@
 {% extends "base.html" %}
+{% load i18n bootstrap3 %}
 
-{% block title %}User Registration{% endblock title %}
-{% block head %}User Registration{% endblock head %}
+{% block title %}{% trans "User Registration" %}{% endblock title %}
+{% block head_title %}{% trans "User Registration" %}{% endblock head_title %}
 
 {% block content %}
-	<form method="post" action="">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<input type="submit" value="register" />
-	</form>
+	<div class="row">
+		<div class="col-lg-8 col-md-8">
+			<div class="well">
+				<form method="post" action="." class="form-horizontal" role="form">
+					{% csrf_token %}
+					<input type="hidden" name="next" value="/" />
+
+					{% bootstrap_form form layout='horizontal' field_class='col-lg-10' label_class='col-lg-2' %}
+
+					{% buttons %}
+						<div class="col-lg-10 col-lg-offset-2">
+							<button type="submit" class="btn btn-primary">
+								{% trans "Register" %}
+							</button>
+						</div>
+					{% endbuttons %}
+				</form>
+			</div>
+		</div>
+	</div>
 {% endblock content %}

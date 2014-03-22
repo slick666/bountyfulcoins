@@ -1,15 +1,20 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Post a Bounty{% endblock %}
-{% block head %}
+{% block title %}{% trans "Post a Bounty" %}{% endblock %}
+{% block head_title %}
 	{% if object.pk %}
-		Edit Bounty
+		{% trans "Edit Bounty" %}
 	{% else %}
-		Post a Bounty
+		{% trans "Post a Bounty" %}
 	{% endif %}
-{% endblock %}
+{% endblock head_title %}
 
 
 {% block content %}
 	{% include "bounty_save_form.html" %}
 {% endblock %}
+
+{% block external %}
+	{% include "bitcoin_address_template.html" %}
+{% endblock external %}
