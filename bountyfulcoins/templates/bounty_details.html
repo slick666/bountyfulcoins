@@ -5,7 +5,9 @@
 {% block head_title %}{% trans "Bounty Details" %}{% endblock head_title %}
 
 {% block content %}
-	<h1>{{ object.title }}</h1>
+<div class="panel panel-default">
+  <div class="panel-heading"><h3>{{ object.title }}</h3></div>
+  <div class="panel-body">
 	<p>{% trans "Url" %}: <a href="{{ object.link }}">{{ object.link }}</a></p>
 	<p>{% trans "Amount" %}: {{object.amount}} {{ object.currency }}</p>
 	<p>{% trans "Keywords" %}: {{object.tags.all|join:", "|default:"None." }}</p>
@@ -21,7 +23,13 @@
 		<p>{% trans "Posted by" %}: {{ object.user }}</p>
 	{% endif %}
 	<hr>
+
 	{% url 'bounty_details' object.id as bonty_url %}
-    {% include "comments/form.html" with redirect_url=bonty_url %}
-	{% render_comment_list for object %}
+	<div style="padding-bottom: 50px;">
+		{% include "comments/form.html" with redirect_url=bonty_url %}
+		{% render_comment_list for object %}
+	</div>
+  </div>
+</div>
+
 {% endblock %}

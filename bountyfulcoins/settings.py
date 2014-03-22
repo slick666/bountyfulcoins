@@ -64,6 +64,13 @@ INSTALLED_APPS = (
     'bountyfulcoinsapp',
 )
 
+from django.utils.translation import ugettext_lazy as _
+
+LANGUAGES = (
+    ('en', _('English')),
+    ('he', _('Hebrew')),
+)
+
 COMMENTS_APP = "django_comments_xtd"
 
 MIDDLEWARE_CLASSES = (
