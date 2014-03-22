@@ -11,8 +11,7 @@ class TestHeaderLinks(SiteDataMixin, WebTest):
                       'about',)
     logged_out = ('auth_login',
                   'registration_register',)
-    logged_in = ('auth_logout', 'search',
-                 'create_bounty',)
+    logged_in = ('auth_logout', 'create_bounty',)
 
     def test_header_contains_links(self):
         # logged out test

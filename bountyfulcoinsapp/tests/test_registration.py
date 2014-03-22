@@ -36,13 +36,13 @@ class TestRegistration(SiteDataMixin, WebTest):
 
     def test_registration_fields(self):
         reg_page = self.app.get(reverse('registration_register'))
-        reg_form = reg_page.form
+        reg_form = reg_page.forms['reg-form']
         for field in self.required_fields:
             self.assertIn(field, reg_form.fields)
 
     def _get_filled_form(self, field_name, value=None):
         reg_page = self.app.get(reverse('registration_register'))
-        regform = reg_page.form
+        regform = reg_page.forms['reg-form']
         data = self.good_reg_data.copy()
         if value:
             data[field_name] = value
@@ -92,7 +92,7 @@ class TestRegistration(SiteDataMixin, WebTest):
 
     def test_valid_registration(self):
         reg_page = self.app.get(reverse('registration_register'))
-        regform = reg_page.form
+        regform = reg_page.forms['reg-form']
         self._fill_form(regform, self.good_reg_data)
         success = regform.submit()
         self.assertRedirects(success, reverse('registration_complete'))
