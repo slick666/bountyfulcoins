@@ -37,7 +37,7 @@ ADMINS = (
 ALLOWED_HOSTS = [
     '.bountyfulcoins.com',
     '127.0.0.1',
-    ]
+]
 
 # Set the Site ID
 SITE_ID = 1
@@ -139,7 +139,8 @@ LOGGING = {
     },
     'formatters': {
         'default': {
-            'format': '%(asctime)s - %(process)s - %(levelname)s %(name)s: %(message)s',
+            'format': '%(asctime)s - %(process)s - %(levelname)s %(name)s: '
+                      '%(message)s',
         },
     },
     'handlers': {
