@@ -6,6 +6,7 @@ south==0.8.4
 requests==2.2.1
 django-comments-xtd==1.2f1
 tweepy==2.2
+django-bootstrap3==3.3.0
 
 # for proper mail validation
 validate_email==1.1

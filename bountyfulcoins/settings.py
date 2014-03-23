@@ -37,7 +37,7 @@ ADMINS = (
 ALLOWED_HOSTS = [
     '.bountyfulcoins.com',
     '127.0.0.1',
-    ]
+]
 
 # Set the Site ID
 SITE_ID = 1
@@ -53,14 +53,22 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.staticfiles',
 
-    'django_extensions',
-    'south',
-    'devserver',
-    'registration',
+    'bootstrap3',
     'captcha',
+    'devserver',
     'django_comments_xtd',
+    'django_extensions',
+    'registration',
+    'south',
 
     'bountyfulcoinsapp',
+)
+
+from django.utils.translation import ugettext_lazy as _
+
+LANGUAGES = (
+    ('en', _('English')),
+    ('he', _('Hebrew')),
 )
 
 COMMENTS_APP = "django_comments_xtd"
@@ -139,7 +147,8 @@ LOGGING = {
     },
     'formatters': {
         'default': {
-            'format': '%(asctime)s - %(process)s - %(levelname)s %(name)s: %(message)s',
+            'format': '%(asctime)s - %(process)s - %(levelname)s %(name)s: '
+                      '%(message)s',
         },
     },
     'handlers': {

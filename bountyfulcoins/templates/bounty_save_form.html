@@ -1,11 +1,25 @@
-<form id="save-form" method="post" action="">
-{% csrf_token %}
-	{{ form.as_p }}
-	{% include "feature_payment.html" %}
-	<div class="submit-buttons">
-		<input type="submit" value="Save" />
-		<input type="submit" name="_redirect" value="Save &amp; View" />
-	</div>
-</form>
+{% load i18n bootstrap3 %}
 
-{% include "bitcoin_address_template.html" %}
+<div class="row">
+	<div class="col-lg-8 col-md-8">
+		<div class="well">
+			<form id="save-form" method="post" action="" class="form-horizontal" role="form">
+				{% csrf_token %}
+				<input type="hidden" name="next" value="/" />
+
+				{% bootstrap_form form layout='horizontal' field_class='col-lg-10' label_class='col-lg-2' %}
+
+				{% include "feature_payment.html" %}
+
+				{% buttons %}
+					<div class="col-lg-10 col-lg-offset-2">
+						<button type="submit" class="btn btn-primary">
+							{% trans "Save" %}
+						</button>
+						<input type="submit" name="_redirect" value="{% trans "Save & View" %}" class="btn btn-primary" />
+					</div>
+				{% endbuttons %}
+			</form>
+		</div>
+	</div>
+</div>

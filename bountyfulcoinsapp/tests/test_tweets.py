@@ -34,7 +34,7 @@ class TestTweetBounty(BountyCreateMixin, SiteDataMixin, WebTest):
         weekday = bounty.ctime.strftime('%A')
         self.assertEqual(
             tweet_msg,
-            "%s #bitcoin bounty paying 2000 in DOGE "
+            "%s #bitcoin bounty paying 2000 in #DOGE "
             "http://example.com/bounty/2/details #bountyful" % weekday)
 
     def test_tweeting_on_shared(self):

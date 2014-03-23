@@ -34,7 +34,7 @@ class BountyCreateMixin(object):
         else:
             page = self.app.get(reverse('change_bounty',
                                 args=[pk]), user='test')
-        return page.form
+        return page.forms['save-form']
 
     def _create_bounty(self, data):
         create_form = self._get_bounty_form()

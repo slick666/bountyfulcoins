@@ -1,27 +1,35 @@
 {% extends "base.html" %}
-{% load comments comments_xtd %}
+{% load i18n comments comments_xtd %}
 
-{% block title %}Bounty - {{object.title}}{% endblock title %}
-{% block head %}Bounty Details{% endblock head %}
+{% block title %}{% trans "Bounty" %} - {{object.title}}{% endblock title %}
+{% block head_title %}{% trans "Bounty Details" %}{% endblock head_title %}
 
 {% block content %}
-	<h1>{{ object.title }}</h1>
-	<p>Url: <a href="{{ object.link }}">{{ object.link }}</a></p>
-	<p>Amount: {{object.amount}} {{ object.currency }}</p>
-	<p>Keywords: {{object.tags.all|join:", "|default:"None." }}</p>
+<div class="panel panel-default">
+  <div class="panel-heading"><h3>{{ object.title }}</h3></div>
+  <div class="panel-body">
+	<p>{% trans "Url" %}: <a href="{{ object.link }}">{{ object.link }}</a></p>
+	<p>{% trans "Amount" %}: {{object.amount}} {{ object.currency }}</p>
+	<p>{% trans "Keywords" %}: {{object.tags.all|join:", "|default:"None." }}</p>
 	{% if object.is_featured %}
-		<p>This bounty is featured</p>
+		<p>{% trans "This bounty is featured" %}</p>
 	{% endif %}
 	{% if object.shared_date %}
-		<p>Date posted: {{ object.shared_date }}</p>
+		<p>{% trans "Date posted" %}: {{ object.shared_date }}</p>
 	{% endif %}
 	{% if user == object.user %}
-		As the owner of this bounty, you may <a href="{% url 'change_bounty' object.id %}">edit it here.</a>
+		{% trans "As the owner of this bounty, you may" %} <a href="{% url 'change_bounty' object.id %}">{% trans "edit it here" %}.</a>
 	{% else %}
-		<p>Posted by: {{ object.user }}</p>
+		<p>{% trans "Posted by" %}: {{ object.user }}</p>
 	{% endif %}
 	<hr>
+
 	{% url 'bounty_details' object.id as bonty_url %}
-    {% include "comments/form.html" with redirect_url=bonty_url %}
-	{% render_comment_list for object %}
+	<div style="padding-bottom: 50px;">
+		{% include "comments/form.html" with redirect_url=bonty_url %}
+		{% render_comment_list for object %}
+	</div>
+  </div>
+</div>
+
 {% endblock %}

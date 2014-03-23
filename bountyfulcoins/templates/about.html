@@ -1,19 +1,22 @@
 {% extends "base.html" %}
-{% load staticfiles %}
 
-{% block title %}About Bountyful Coins{% endblock %}
-{% block head %}About Bountyful Coins{% endblock %}
+{% load staticfiles i18n %}
+
+{% block title %}{% trans "About Bountyful Coins" %}{% endblock %}
+{% block head_title %}{% trans "About Bountyful Coins" %}{% endblock head_title %}
+
 {% block content %}
-<H2> Who is Bountyful?</H2>
-<p>Bountyful Coins is an open-sourced Bounty listing application designed to organize and promote bounties on bitcoin and all other rising altocins. You will find all the possible jobs in crypto in this community.
-<H2> How to join the Bountyful Community</H2>
-<p>Bountyful Coins <a href="https://github.com/bountyful/bountyfulcoins">accepts pull requests</a> on Github to improve the platform functionality. You may also comment on bounties listed.</p>
-<H2>How you can make money from this site</H2>
-<p>Click any Bounty listed that you like, deliver the work and get paid! </p>
-<p>Bountyful Coins generates revenue via featured and promoted Bounties. Revenue goes to pay Bounties of anyone (engineers, marketers, writers, BizDev) who want to help improve the platform to increase the flow of higher quality Bounties.</P>
-<p>You will make even more money from Bountyfulcoins in three easy steps:
-	<UL>
-		<LI>Don't see a bount you like? Propose a task and Bounty amount or pick a task from our <a href="https://www.pivotaltracker.com/s/projects/1025406" target=_new>Pivotal Tracker Icebox</a> </LI>
-		<LI>Complete the work and submit a pull request in our Github repo</LI>
-		<LI>Test features and help us ensure quality of your submitted code or content and enjoy your bounty which will be paid in bitcoin (BTC)</LI>
+	<h2>{% trans "Who is Bountyful?" %}</h2>
+	<p>{% blocktrans %}Bountyful Coins is an open-sourced Bounty listing application designed to organize and promote bounties on bitcoin and all other rising altocins. You will find all the possible jobs in crypto in this community.{% endblocktrans %}</p>
+	<h2>{% trans "How to join the Bountyful Community" %}</h2>
+	<p>Bountyful Coins <a href="https://github.com/bountyful/bountyfulcoins">{% trans "accepts pull requests" %}</a> {% trans "on Github to improve the platform functionality. You may also comment on bounties listed." %}</p>
+	<h2>{% trans "How you can make money from this site" %}</h2>
+	<p>{% trans "Click any Bounty listed that you like, deliver the work and get paid!" %}</p>
+	<p>{% trans "Bountyful Coins generates revenue via featured and promoted Bounties. Revenue goes to pay Bounties of anyone (engineers, marketers, writers, BizDev) who want to help improve the platform to increase the flow of higher quality Bounties." %}</p>
+	<p>{% trans "You will make even more money from Bountyfulcoins in three easy steps" %}:</p>
+	<ul>
+		<li>{% trans "Don't see a bount you like? Propose a task and Bounty amount or pick a task from our" %} <a href="https://www.pivotaltracker.com/s/projects/1025406" target="_new">Pivotal Tracker Icebox</a> </li>
+		<li>{% trans "Complete the work and submit a pull request in our Github repo" %}</li>
+		<li>{% trans "Test features and help us ensure quality of your submitted code or content and enjoy your bounty which will be paid in bitcoin (BTC)" %}</li>
+	</ul>
 {% endblock %}

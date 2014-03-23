@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% load staticfiles %}
+{% load i18n staticfiles %}
 
 {% block external %}
 	<script type="text/javascript"
 		src="{% static "/site_media/bounty_edit.js" %}"></script>
 	{% endblock %}
 {% block title %}{{ username }}{% endblock %}
-{% block head %}Bounties by {{ username }} {% endblock %}
+{% block head_title %}{% trans "Bounties by" %} {{ username }} {% endblock head_title %}
 {% block content %}
 	{% include "bounty_list.html" %}
 {% endblock %}
