@@ -1,0 +1,30 @@
+{% load comments bootstrap3 i18n %}
+
+{% get_comment_form for object as form %}
+{% if user.is_authenticated %}
+	<form action="{% comment_form_target %}" method="POST">
+		{% csrf_token %}
+		<div class="form-group">
+			<textarea class="form-control" autocomplete="off" cols="20" id="id_comment" name="comment" placeholder="comment" rows="10"></textarea>
+			<span class="help-block">{% trans "Please enter your comment here and click submit" %}</span>
+		</div>
+		<div class="form-group">
+			{{ form.honeypot }}
+			{{ form.content_type }}
+			{{ form.object_pk }}
+			{{ form.timestamp }}
+			{{ form.security_hash }}
+			{{ form.reply_to }}
+			<input type="hidden" name="next" value="{{ redirect_url }}" />
+		</div>
+		{% buttons %}
+			<div>
+				<button type="submit" class="btn btn-primary">
+					{% trans "Add comment" %}
+				</button>
+			</div>
+		{% endbuttons %}
+	</form>
+{% else %}
+	<p>{% trans "Please" %} <a href="{% url 'auth_login' %}?next={{redirect_url}}">{% trans "Login" %}</a> {% trans "to leave a comment." %}</p>
+{% endif %}

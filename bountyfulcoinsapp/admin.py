@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from bountyfulcoinsapp.models import Link, Tag, Address, Bounty, SharedBounty
 
 
@@ -10,10 +11,10 @@ class BountyAdmin(admin.ModelAdmin):
 
 
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('name', 'id', 'verified_balance', 'last_synced')
+    list_display = ('address_id', 'name', 'verified_balance', 'last_synced')
     list_fitler = ('last_synced',)
     ordering = ('verified_balance',)
-    search_fields = ('id', 'name',)
+    search_fields = ('address_id', 'name',)
 
 
 admin.site.register(Link)

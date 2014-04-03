@@ -1,0 +1,318 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-22 14:02+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\bountyfulcoins\settings.py:70
+msgid "English"
+msgstr ""
+
+#: .\bountyfulcoins\settings.py:71
+msgid "Hebrew"
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:5
+#: .\bountyfulcoins\templates\about.html:6
+msgid "About Bountyful Coins"
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:9
+msgid "Who is Bountyful?"
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:10
+msgid ""
+"Bountyful Coins is an open-sourced Bounty listing application designed to "
+"organize and promote bounties on bitcoin and all other rising altocins. You "
+"will find all the possible jobs in crypto in this community."
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:11
+msgid "How to join the Bountyful Community"
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:12
+msgid "accepts pull requests"
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:12
+msgid ""
+"on Github to improve the platform functionality. You may also comment on "
+"bounties listed."
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:13
+msgid "How you can make money from this site"
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:14
+msgid "Click any Bounty listed that you like, deliver the work and get paid!"
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:15
+msgid ""
+"Bountyful Coins generates revenue via featured and promoted Bounties. "
+"Revenue goes to pay Bounties of anyone (engineers, marketers, writers, "
+"BizDev) who want to help improve the platform to increase the flow of higher "
+"quality Bounties."
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:16
+msgid "You will make even more money from Bountyfulcoins in three easy steps"
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:18
+msgid ""
+"Don't see a bount you like? Propose a task and Bounty amount or pick a task "
+"from our"
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:19
+msgid "Complete the work and submit a pull request in our Github repo"
+msgstr ""
+
+#: .\bountyfulcoins\templates\about.html:20
+msgid ""
+"Test features and help us ensure quality of your submitted code or content "
+"and enjoy your bounty which will be paid in bitcoin (BTC)"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_details.html:4
+msgid "Bounty"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_details.html:5
+msgid "Bounty Details"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_details.html:9
+msgid "Url"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_details.html:10
+msgid "Amount"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_details.html:11
+msgid "Keywords"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_details.html:13
+msgid "This bounty is featured"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_details.html:16
+msgid "Date posted"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_details.html:19
+msgid "As the owner of this bounty, you may"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_details.html:19
+msgid "edit it here"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_details.html:21
+msgid "Posted by"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_save.html:4
+#: .\bountyfulcoins\templates\bounty_save.html:9
+msgid "Post a Bounty"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_save.html:7
+msgid "Edit Bounty"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_save_form.html:17
+msgid "Save"
+msgstr ""
+
+#: .\bountyfulcoins\templates\bounty_save_form.html:19
+msgid "Save & View"
+msgstr ""
+
+#: .\bountyfulcoins\templates\main_page.html:4
+#: .\bountyfulcoins\templates\main_page.html:6
+msgid "Welcome to Bountyful Coins"
+msgstr ""
+
+#: .\bountyfulcoins\templates\main_page.html:7
+msgid "(noun)"
+msgstr ""
+
+#: .\bountyfulcoins\templates\main_page.html:9
+msgid ""
+"Definition: good things that are given or provided freely and in large "
+"amounts."
+msgstr ""
+
+#: .\bountyfulcoins\templates\main_page.html:15
+msgid "Welcome"
+msgstr ""
+
+#: .\bountyfulcoins\templates\main_page.html:15
+msgid "Here you can find and share bounties for bitcoins and altcoins!"
+msgstr ""
+
+#: .\bountyfulcoins\templates\main_page.html:17
+msgid "Welcome guest!"
+msgstr ""
+
+#: .\bountyfulcoins\templates\main_page.html:17
+msgid "You need to"
+msgstr ""
+
+#: .\bountyfulcoins\templates\main_page.html:17
+#: .\bountyfulcoins\templates\top_navigation.html:31
+#: .\bountyfulcoins\templates\registration\login.html:25
+msgid "Login"
+msgstr ""
+
+#: .\bountyfulcoins\templates\main_page.html:17
+msgid "before you can post and share bounties."
+msgstr ""
+
+#: .\bountyfulcoins\templates\search.html:8
+#: .\bountyfulcoins\templates\search.html:9
+msgid "Search Bounties"
+msgstr ""
+
+#: .\bountyfulcoins\templates\search.html:17
+msgid "Search"
+msgstr ""
+
+#: .\bountyfulcoins\templates\top_navigation.html:11
+msgid "Bountyful Coins"
+msgstr ""
+
+#: .\bountyfulcoins\templates\top_navigation.html:15
+msgid "Popular"
+msgstr ""
+
+#: .\bountyfulcoins\templates\top_navigation.html:16
+msgid "About"
+msgstr ""
+
+#: .\bountyfulcoins\templates\top_navigation.html:18
+msgid "Submit"
+msgstr ""
+
+#: .\bountyfulcoins\templates\top_navigation.html:29
+msgid "Logout"
+msgstr ""
+
+#: .\bountyfulcoins\templates\top_navigation.html:32
+#: .\bountyfulcoins\templates\registration\registration_form.html:20
+msgid "Register"
+msgstr ""
+
+#: .\bountyfulcoins\templates\admin\bountyfulcoinsapp\change_list.html:40
+msgid "Home"
+msgstr ""
+
+#: .\bountyfulcoins\templates\admin\bountyfulcoinsapp\change_list.html:58
+#, python-format
+msgid "Add %(name)s"
+msgstr ""
+
+#: .\bountyfulcoins\templates\admin\bountyfulcoinsapp\change_list.html:67
+msgid "Please correct the error below."
+msgstr ""
+
+#: .\bountyfulcoins\templates\admin\bountyfulcoinsapp\change_list.html:67
+msgid "Please correct the errors below."
+msgstr ""
+
+#: .\bountyfulcoins\templates\admin\bountyfulcoinsapp\change_list.html:78
+msgid "Filter"
+msgstr ""
+
+#: .\bountyfulcoins\templates\comments\comment.html:15
+msgid "Comment for:"
+msgstr ""
+
+#: .\bountyfulcoins\templates\comments\comment.html:19
+msgid "Inappropriate comments like this one are removed."
+msgstr ""
+
+#: .\bountyfulcoins\templates\django_comments_xtd\reply.html:14
+msgid "Reply to"
+msgstr ""
+
+#: .\bountyfulcoins\templates\registration\login.html:4
+msgid "Bountyful Coins - User Login"
+msgstr ""
+
+#: .\bountyfulcoins\templates\registration\login.html:5
+msgid "User Login"
+msgstr ""
+
+#: .\bountyfulcoins\templates\registration\registration_form.html:4
+#: .\bountyfulcoins\templates\registration\registration_form.html:5
+msgid "User Registration"
+msgstr ""
+
+#: .\bountyfulcoinsapp\forms.py:18
+msgid ""
+"This email address is already in use. Please supply a different email "
+"address."
+msgstr ""
+
+#: .\bountyfulcoinsapp\forms.py:20
+msgid ""
+"This email does not seem to be a valid address, please try another mail "
+"address"
+msgstr ""
+
+#: .\bountyfulcoinsapp\forms.py:37
+msgid "No assignable addresses found, cannot feature the bounty at this time"
+msgstr ""
+
+#: .\bountyfulcoinsapp\forms.py:54
+msgid "Please enter a comma seperated list of tags"
+msgstr ""
+
+#: .\bountyfulcoinsapp\forms.py:83
+msgid "Cannot save bouty without a user"
+msgstr ""
+
+#: .\bountyfulcoinsapp\models.py:33
+msgid "Bounty URL"
+msgstr ""
+
+#: .\bountyfulcoinsapp\models.py:34
+msgid "Bounty Title"
+msgstr ""
+
+#: .\bountyfulcoinsapp\models.py:36
+msgid "Bounty Amount"
+msgstr ""
+
+#: .\bountyfulcoinsapp\models.py:38
+msgid "Bounty Currency"
+msgstr ""
+
+#: .\bountyfulcoinsapp\views.py:240
+msgid "Succesfully imported addresses form file."
+msgstr ""
+
+#: .\bountyfulcoinsapp\tests\test_registration.py:74
+msgid "A user with that username already exists."
+msgstr ""

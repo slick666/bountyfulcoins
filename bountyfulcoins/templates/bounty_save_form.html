@@ -1,9 +1,25 @@
-<form id="save-form" method="post" action="">
-{% csrf_token %}
-	{{ form.as_p }}
-	{% if object.is_featured %}
-		<p>Address:<span>&nbsp;{{object.featured.address.address_id}}</span></p>
-		<p>Please fund the above address with a minimum of {{ settings.FEATURE_POST_MIN_CHARGE }} to post the featured bounty</p>
-	{% endif %}
-	<input type="submit" value="save" />
-</form>
+{% load i18n bootstrap3 %}
+
+<div class="row">
+	<div class="col-lg-8 col-md-8">
+		<div class="well">
+			<form id="save-form" method="post" action="" class="form-horizontal" role="form">
+				{% csrf_token %}
+				<input type="hidden" name="next" value="/" />
+
+				{% bootstrap_form form layout='horizontal' field_class='col-lg-10' label_class='col-lg-2' %}
+
+				{% include "feature_payment.html" %}
+
+				{% buttons %}
+					<div class="col-lg-10 col-lg-offset-2">
+						<button type="submit" class="btn btn-primary">
+							{% trans "Save" %}
+						</button>
+						<input type="submit" name="_redirect" value="{% trans "Save & View" %}" class="btn btn-primary" />
+					</div>
+				{% endbuttons %}
+			</form>
+		</div>
+	</div>
+</div>

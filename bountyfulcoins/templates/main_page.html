@@ -1,17 +1,25 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Welcome to Bountyful Coins{% endblock title %}
-{% block head %}Welcome to Bountyful Coins{% endblock head %}
+{% block title %}{% trans "Welcome to Bountyful Coins" %}{% endblock title %}
+{% block head %}
+	<h1>{% trans "Welcome to Bountyful Coins" %}</h1>
+	<strong>boun·ty</strong> {% trans "(noun)" %}
+	<br>
+	<i>{% trans "Definition: good things that are given or provided freely and in large amounts." %}</i>
+{% endblock head %}
+
+{% block extra_head %}
+	<div class="well">
+		{% if user.username %}
+			<p>{% trans "Welcome" %} {{ user.username }}! {% trans "Here you can find and share bounties for bitcoins and altcoins!" %}</p>
+		{% else %}
+			<p>{% trans "Welcome guest!" %} {% trans "You need to" %} <a href="{% url 'auth_login' %}">{% trans "Login" %}</a> {% trans "before you can post and share bounties." %}</p>
+		{% endif %}
+	</div>
+{% endblock extra_head %}
 
 {% block content %}
-	{% if user.username %}
-		<p>Welcome {{ user.username }}!
-			Here you can find and share bounties for bitcoins and altcoins!</p>
-	{% else %}
-		<p> Welcome guest!
-			You need to <a href="{% url 'auth_login' %}">login</a>
-			before you can post and share bounties. </p>
-	{% endif %}
 	<hr>
 	{% include "total_bounties.html" %}
 	<hr>

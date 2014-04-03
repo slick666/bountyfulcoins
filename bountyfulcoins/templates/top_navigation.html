@@ -1,0 +1,38 @@
+{% load i18n %}
+
+<div class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="{% url 'main_page' %}">{% trans "Bountyful Coins" %}</a>
+		</div>
+		<div class="navbar-collapse navbar-responsive-collapse collapse" style="height: 1px;">
+			{# TODO: add active class to the currently active page #}
+			<ul class="nav navbar-nav">
+				<li><a href="{% url 'popular' %}">{% trans "Popular" %}</a></li>
+				<li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
+				{% if user.is_authenticated %}
+					<li><a href="{% url 'create_bounty' %}">{% trans "Submit" %}</a></li>
+				{% endif %}
+			</ul>
+
+			<form method="get" action="{% url 'search' %}" class="navbar-form navbar-left">
+				<input type="text" class="form-control col-lg-8 col-md-4" name="query" placeholder="Search" value="{{ request.GET.query }}">
+			</form>
+
+			<ul class="nav navbar-nav navbar-right">
+				{% if user.is_authenticated %}
+					<li><a href="{% url 'user_page' user.username %}">{{ user.username }}</a></li>
+					<li><a href="{% url 'auth_logout' %}">{% trans "Logout" %}</a></li>
+				{% else %}
+					<li><a href="{% url 'auth_login' %}">{% trans "Login" %}</a></li> 
+					<li><a href="{% url 'registration_register' %}">{% trans "Register" %}</a></li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+</div>

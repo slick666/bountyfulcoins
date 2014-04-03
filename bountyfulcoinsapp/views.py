@@ -1,21 +1,24 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import Q
-from django.http import Http404
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic import (TemplateView, CreateView,
+                                  UpdateView, DetailView)
+from django.views.generic.edit import BaseFormView
+from django.utils import timezone
 
 from registration.views import RegistrationView as BaseRegistrationView
 
 from bountyfulcoinsapp.forms import (RegistrationForm, SearchForm,
-                                     BountySaveForm)
+                                     BountySaveForm, ImportAddressesForm)
 from bountyfulcoinsapp.models import (Bounty, SharedBounty, FeaturedBounty,
                                       Tag, calculate_totals)
 
@@ -45,7 +48,8 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
         context.update({
-            'shared_bounties': SharedBounty.objects.order_by('-votes')[:50],
+            'shared_bounties': SharedBounty.objects.filter(
+                disabled=False)[:50],
             'featured_bounties': FeaturedBounty.get_funded_entries(),
             'total_bounties': calculate_totals(),
         })
@@ -59,7 +63,7 @@ class AboutView(TemplateView):
 # View of the User Page.
 def user_page(request, username):
     user = get_object_or_404(User, username=username)
-    bounties = user.bounty_set.order_by('-id')
+    bounties = user.bounty_set.all()
     variables = RequestContext(request, {
         'bounties': bounties,
         'username': username,
@@ -75,7 +79,7 @@ class BountyReusableMixin(object):
     form_class = BountySaveForm
 
     def get_initial(self):
-        initial = self.initial
+        initial = super(BountyReusableMixin, self).get_initial()
         if self.object:
             initial['url'] = self.object.link.url
             tags = self.object.tags.all()
@@ -87,8 +91,13 @@ class BountyReusableMixin(object):
                 initial['featured'] = True
         return initial
 
+    def get_success_url(self):
+        if '_redirect' not in self.request.REQUEST and self.object:
+            return reverse_lazy('change_bounty', args=[self.object.pk])
+        return super(BountyReusableMixin, self).get_success_url()
+
     def form_valid(self, form):
-        self.object = form.save(user=self.request.user)
+        self.object = form.save(user=self.request.user, request=self.request)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -96,8 +105,21 @@ class BountyCreate(LoginRequiredMixin, BountyReusableMixin, CreateView):
     pass
 
 
-class BountyChange(LoginRequiredMixin, BountyReusableMixin, UpdateView):
+class BountyOwnerOnlyMixin(LoginRequiredMixin):
+    def get_object(self, *args, **kwargs):
+        obj = super(BountyOwnerOnlyMixin, self).get_object(*args, **kwargs)
+        if obj.user != self.request.user:
+            raise Http404('Could not locate the bounty')
+        return obj
+
+
+class BountyChange(BountyOwnerOnlyMixin, BountyReusableMixin, UpdateView):
     pass
+
+
+class BountyDetails(DetailView):
+    template_name = 'bounty_details.html'
+    model = Bounty
 
 
 # Views for the Home Page
@@ -107,10 +129,10 @@ class PopularBountiesView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopularBountiesView, self).get_context_data(**kwargs)
 
-        yesterday = datetime.today() - timedelta(days=1)
+        yesterday = timezone.now() - timedelta(days=1)
         context = {
             'shared_bounties': SharedBounty.objects.filter(
-                date__gt=yesterday).order_by('-votes')[:50],
+                date__gt=yesterday, disabled=False)[:50],
             'featured_bounties': FeaturedBounty.get_funded_entries(),
         }
 
@@ -119,7 +141,7 @@ class PopularBountiesView(TemplateView):
 
 def tag_page(request, tag_name):
     tag = get_object_or_404(Tag, name=tag_name)
-    bounties = tag.bounties.order_by('-id')
+    bounties = tag.bounties.all()
     variables = RequestContext(request, {
         'bounties': bounties,
         'tag_name': tag_name,
@@ -131,7 +153,7 @@ def tag_page(request, tag_name):
 
 def tag_cloud_page(request):
     MAX_WEIGHT = 5
-    tags = Tag.objects.order_by('name')
+    tags = Tag.objects.all()
     # Calculate tag, minimum and maximum counts.
     min_count = max_count = tags[0].bounties.count()
     for tag in tags:
@@ -200,3 +222,33 @@ def bounty_vote_page(request):
     if 'HTTP_REFERER' in request.META:
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
     return HttpResponseRedirect('/')
+
+
+class ImportAddressView(BaseFormView):
+    success_url = reverse_lazy('admin:bountyfulcoinsapp_address_changelist')
+    form_class = ImportAddressesForm
+    http_method_names = ['post']
+    filetype = 'csv'  # default to csv
+
+    def form_valid(self, form):
+        """
+        If the form is valid, save the file data into db.
+        """
+        form.save_addresses()
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _('Succesfully imported addresses form file.')
+        )
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        """
+        If the form is valid, save the file data into db.
+        """
+        for field, v in form.errors.items():
+            error = '%s: %s' % (field, ', '.join([unicode(e) for e in v]))
+            messages.add_message(
+                self.request, messages.ERROR,
+                error
+            )
+        return HttpResponseRedirect(self.get_success_url())

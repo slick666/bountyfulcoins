@@ -1,12 +1,12 @@
-#nav {
-	float: right;
+body {
+	padding-top: 50px;
 }
 
 input {
 	display: block;
 }
 
-li {padding-bottom: 1em;}
+ul.bounties > li {padding-bottom: 1em;}
 
 ul.bounties .edit {
 	font-size: 70%;
@@ -33,3 +33,38 @@ ul.tags, ul.tags li {
 .tag-cloud4 { font-size: 180%; }
 .tag-cloud5 { font-size: 200%; }
 
+#id_honeypot {
+    display: none;
+}
+
+input[type="checkbox"] {
+	display: inline-block;
+}
+
+.submit-buttons input[type="submit"] {
+	width: 100px;
+	display: inline-block;
+}
+
+/* Action hints are slidedowns, hidden by default */
+.bitcoin-action-hint {
+    display: none;
+}
+
+/* Show dashed underlining so people get a hint it's clickable */
+.bitcoin-address-container .bitcoin-address {
+    border-bottom: 1px dashed gray;
+    cursor: pointer;
+}
+
+/* Center QR code image */
+.bitcoin-address-qr-container > img,
+.bitcoin-address-qr-container > canvas {
+    margin: 0 auto;
+}
+
+/* bitcoinprices.js -  for bitcoinprices, donation nominated in USD */
+.clickable-price {
+    cursor: pointer;
+    border-bottom: 1px #888 dashed;
+}

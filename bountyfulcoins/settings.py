@@ -34,7 +34,10 @@ ADMINS = (
     ('Bountyful Coins', 'contact@bountyfulcoins.com'),
 )
 
-ALLOWED_HOSTS = ['www.bountyfulcoins.com']
+ALLOWED_HOSTS = [
+    '.bountyfulcoins.com',
+    '127.0.0.1',
+]
 
 # Set the Site ID
 SITE_ID = 1
@@ -43,20 +46,32 @@ SITE_ID = 1
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.comments',
     'django.contrib.contenttypes',
+    'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'django_extensions',
-    'south',
-    'devserver',
-    'registration',
+    'bootstrap3',
     'captcha',
+    'devserver',
+    'django_comments_xtd',
+    'django_extensions',
+    'registration',
+    'south',
 
     'bountyfulcoinsapp',
 )
+
+from django.utils.translation import ugettext_lazy as _
+
+LANGUAGES = (
+    ('en', _('English')),
+    ('he', _('Hebrew')),
+)
+
+COMMENTS_APP = "django_comments_xtd"
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -132,7 +147,8 @@ LOGGING = {
     },
     'formatters': {
         'default': {
-            'format': '%(asctime)s - %(process)s - %(levelname)s %(name)s: %(message)s',
+            'format': '%(asctime)s - %(process)s - %(levelname)s %(name)s: '
+                      '%(message)s',
         },
     },
     'handlers': {
@@ -169,7 +185,7 @@ LOGGING = {
         },
         'bountyfulcoinsapp': {
             'level': 'DEBUG',
-            'propogate': True
+            'propagate': True
         },
         '': {
             'handlers': ['console', 'file', 'mail_admins'],
@@ -198,3 +214,10 @@ FEATURE_POST_DAILY_CHARGE = 0.01594
 
 ADDRESSES_LIVE_SYNC = True  # turn this off when running sync in cron
 ADDRESSES_SYNC_FREQUENCE = 60 * 5  # five minutes
+
+COMMENTS_XTD_MAX_THREAD_LEVEL = 8
+
+TWITTER_CONSUMER_KEY = 'type in your consumer key here'
+TWITTER_CONSUMER_SECRET = 'type in your consumer secret here'
+TWITTER_ACCESS_TOKEN = 'type in your access token here'
+TWITTER_ACCESS_TOKEN_SECRET = 'type in your access token secret here'

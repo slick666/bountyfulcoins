@@ -1,0 +1,12 @@
+{% if object.is_featured %}
+  <div class="well">
+	<p class="text-center">
+		Click this link to keep this bounty featured: 
+		<strong class="bitcoin-address"
+				data-bc-amount="{{ settings.FEATURE_POST_MIN_CHARGE }}"
+				data-bc-label="Feature my bounty on www.bountyfulcoins.com"
+				data-bc-message="{{ settings.FEATURE_POST_MIN_CHARGE }} BTC"
+				data-bc-address="{{ object.featured.target_address }}">{{ object.featured.target_address }}</strong>
+	</p>
+</div>
+{% endif %}

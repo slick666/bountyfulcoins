@@ -1,17 +1,25 @@
 {% extends "base.html" %}
-{% load staticfiles %}
+{% load i18n staticfiles bootstrap3 %}
 
 {% block external %}
 	<script type="text/javascript"
 		src="{% static "/site_media/search.js" %}"></script>
 {% endblock %}
-{% block title %}Search Bounties{% endblock %}
-{% block head %}Search Bounties{% endblock %}
+{% block title %}{% trans "Search Bounties" %}{% endblock %}
+{% block head_title %}{% trans "Search Bounties" %}{% endblock head_title %}
 {% block content %}
-<form id="search-form" method="get" action=".">{% csrf_token %}
-	{{ form.as_p }}
-	<input type="submit" value="search" />
+<div class="well" style="max-width: 550px;">
+	<form id="search-form" method="get" action=".">
+	{% bootstrap_form form %}
+	{% buttons %}
+		<div>
+			<button type="submit" class="btn btn-primary">
+				{% trans "Search" %}
+			</button>
+		</div>
+	{% endbuttons %}
 </form>
+</div>
 <div id="search-results">
 	{% if show_results %}
 		{% include "bounty_list.html" %}
